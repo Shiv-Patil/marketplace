@@ -1,5 +1,6 @@
 "use client";
 
+import Listing from "@/components/Listing";
 import Navbar from "@/components/Navbar";
 import MaxWidthDiv from "@/components/layout/MaxWidthDiv";
 import SearchBar from "@/components/ui/SearchBar";
@@ -7,10 +8,25 @@ import Image from "next/image";
 import { useState } from "react";
 
 function Listings() {
-  const [listings, setListings] = useState([]);
+  const [listings, setListings] = useState(
+    new Array(4).fill({
+      coverImage: "/monitor.jpg",
+      name: "Monitor",
+      description: "Ultra hd 4k hot 69hz",
+      end: "2024-05-15",
+      sellerAvatar: "",
+      sellerName: "Batman",
+      price: 69420,
+      views: 1,
+    })
+  );
 
   return listings.length ? (
-    <></>
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-4">
+      {listings.map((e, index) => (
+        <Listing {...e} key={index} />
+      ))}
+    </div>
   ) : (
     <div className="relative mx-auto h-40 w-40 py-14 text-sm text-secondary-foreground">
       No listings to show
