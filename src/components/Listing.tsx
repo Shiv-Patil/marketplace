@@ -47,6 +47,7 @@ const Listing = ({
           src={coverImage}
           fill={true}
           className="object-fill blur-2xl"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           placeholder="empty"
         />
         <Image
@@ -54,12 +55,15 @@ const Listing = ({
           src={coverImage}
           fill={true}
           className="object-contain"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           placeholder="empty"
         />
       </div>
       <CardHeader>
         <CardTitle>{name}</CardTitle>
-        <CardDescription className="overflow-ellipsis overflow-clip">{description}</CardDescription>
+        <CardDescription className="overflow-clip overflow-ellipsis">
+          {description}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         {timeleft <= 0 ? (

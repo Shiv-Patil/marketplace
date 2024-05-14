@@ -9,8 +9,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
-import { accounts, sessions, users } from "@/server/db/schema"
-
+import { accounts, sessions, users } from "@/server/db/schema";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -43,12 +42,12 @@ export const authOptions: NextAuthOptions = {
   adapter: DrizzleAdapter(db, {
     usersTable: users,
     accountsTable: accounts,
-    sessionsTable: sessions
+    sessionsTable: sessions,
   }) as Adapter,
   pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
-    error: '/auth/signin', // Error code passed in query string as ?error=
+    signIn: "/auth/signin",
+    signOut: "/auth/signout",
+    error: "/auth/signin", // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // (used for check email message)
     // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
   },

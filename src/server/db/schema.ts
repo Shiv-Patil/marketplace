@@ -97,12 +97,12 @@ export const accounts = createTable(
       columns: [account.provider, account.providerAccountId],
     }),
   })
-)
- 
+);
+
 export const sessions = createTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
-})
+});

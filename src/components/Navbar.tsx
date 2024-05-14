@@ -16,9 +16,9 @@ const Navbar = () => {
             src="logo.svg"
             height={32}
             width={32}
-            className="object-contain"
+            className="h-8 w-8 object-contain"
             alt="logo"
-          />{" "}
+          />
           Marketplace
         </Link>
 

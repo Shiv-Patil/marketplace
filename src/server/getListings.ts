@@ -11,7 +11,7 @@ import {
   media as mediaTable,
   users as usersTable,
 } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 
 export async function getListings() {
   const rows = await db
@@ -21,7 +21,15 @@ export async function getListings() {
     .innerJoin(mediaTable, eq(listingsTable.listingId, mediaTable.listingId))
     .leftJoin(bidsTable, eq(bidsTable.listingId, listingsTable.listingId));
   const listings = rows.reduce<
-    Record<number, { listing: ListingType; user: UserType; media: MediaType; bids: BidType[] }>
+    Record<
+      number,
+      {
+        listing: ListingType;
+        user: UserType;
+        media: MediaType;
+        bids: BidType[];
+      }
+    >
   >((acc, row) => {
     const listing = row.listing;
     const user = row.user;
@@ -32,12 +40,14 @@ export async function getListings() {
     if (row.bid) acc[listing.listingId].bids.push(row.bid);
     return acc;
   }, {});
-  return Object.values(listings);
+  return Object.values(listings).sort(
+    (a, b) => b.listing.startDate.getTime() - a.listing.startDate.getTime()
+  );
 }
 
 export type getListingsType = {
-    listing: ListingType;
-    user: UserType;
-    media: MediaType;
-    bids: BidType[];
+  listing: ListingType;
+  user: UserType;
+  media: MediaType;
+  bids: BidType[];
 }[];
