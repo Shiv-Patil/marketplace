@@ -4,16 +4,16 @@ import Listing from "@/components/Listing";
 import Navbar from "@/components/Navbar";
 import MaxWidthDiv from "@/components/layout/MaxWidthDiv";
 import SearchBar from "@/components/ui/SearchBar";
-import {getListings, getListingsType} from "@/server/getListings";
+import { getListings, getListingsType } from "@/server/getListings";
+import { SessionProvider } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-
 
 function Listings() {
   const [listings, setListings] = useState<getListingsType>([]);
   useEffect(() => {
     (async () => setListings(await getListings()))();
-  }, [])
+  }, []);
 
   return listings.length ? (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-4">
@@ -23,8 +23,8 @@ function Listings() {
           name={e.listing.name}
           description={e.listing.shortDescription}
           price={+e.listing.basePrice}
-          sellerAvatar={e.user.avatar}
-          sellerName={e.user.fullName}
+          sellerAvatar={e.user.image}
+          sellerName={e.user.name}
           endDate={e.listing.endDate}
           bids={e.bids.length}
           key={e.listing.listingId}
@@ -41,7 +41,10 @@ function Listings() {
 export default function Home() {
   return (
     <>
-      <Navbar />
+      <SessionProvider>
+        <Navbar />
+      </SessionProvider>
+
       <main className="bg-background">
         <MaxWidthDiv>
           <section about="hero" className="flex pb-10 pt-20">

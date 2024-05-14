@@ -1,10 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import MaxWidthDiv from "./layout/MaxWidthDiv";
 import Image from "next/image";
-import { buttonVariants } from "./ui/button";
+import { useSession } from "next-auth/react";
+import { SignIn, SignOut } from "./NavAuthButtons";
 
 const Navbar = () => {
-  const user = undefined;
+  const { data: session } = useSession();
   return (
     <nav className="sticky inset-x-0 top-0 z-50 h-16 w-full border-b border-secondary bg-background/75 backdrop-blur-lg transition-all">
       <MaxWidthDiv className="h-full flex-row items-center justify-between border-b">
@@ -20,18 +23,7 @@ const Navbar = () => {
         </Link>
 
         <div className="flex h-full items-center gap-4">
-          {user ? (
-            <></>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className={buttonVariants({ size: "sm", variant: "secondary" })}
-              >
-                Login
-              </Link>
-            </>
-          )}
+          {session ? <SignOut /> : <SignIn />}
         </div>
       </MaxWidthDiv>
     </nav>

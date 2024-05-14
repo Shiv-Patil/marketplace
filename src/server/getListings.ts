@@ -17,7 +17,7 @@ export async function getListings() {
   const rows = await db
     .select()
     .from(listingsTable)
-    .innerJoin(usersTable, eq(usersTable.userId, listingsTable.sellerId))
+    .innerJoin(usersTable, eq(usersTable.id, listingsTable.sellerId))
     .innerJoin(mediaTable, eq(listingsTable.listingId, mediaTable.listingId))
     .leftJoin(bidsTable, eq(bidsTable.listingId, listingsTable.listingId));
   const listings = rows.reduce<
