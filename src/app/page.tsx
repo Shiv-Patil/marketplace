@@ -4,27 +4,31 @@ import Listing from "@/components/Listing";
 import Navbar from "@/components/Navbar";
 import MaxWidthDiv from "@/components/layout/MaxWidthDiv";
 import SearchBar from "@/components/ui/SearchBar";
+import {getListings, getListingsType} from "@/server/getListings";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 
 function Listings() {
-  const [listings, setListings] = useState(
-    new Array(4).fill({
-      coverImage: "/monitor.jpg",
-      name: "Monitor",
-      description: "Ultra hd 4k hot 69hz",
-      end: "2024-05-15",
-      sellerAvatar: "",
-      sellerName: "Batman",
-      price: 69420,
-      views: 1,
-    })
-  );
+  const [listings, setListings] = useState<getListingsType>([]);
+  useEffect(() => {
+    (async () => setListings(await getListings()))();
+  }, [])
 
   return listings.length ? (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-4">
-      {listings.map((e, index) => (
-        <Listing {...e} key={index} />
+      {listings.map((e) => (
+        <Listing
+          coverImage={e.media.url}
+          name={e.listing.name}
+          description={e.listing.shortDescription}
+          price={+e.listing.basePrice}
+          sellerAvatar={e.user.avatar}
+          sellerName={e.user.fullName}
+          endDate={e.listing.endDate}
+          bids={e.bids.length}
+          key={e.listing.listingId}
+        />
       ))}
     </div>
   ) : (

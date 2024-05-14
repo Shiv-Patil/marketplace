@@ -19,22 +19,22 @@ const Listing = ({
   coverImage,
   name,
   description,
-  end,
+  endDate,
   sellerAvatar,
   sellerName,
   price,
-  views,
+  bids,
 }: {
   coverImage: string;
   name: string;
   description: string;
-  end: string;
-  sellerAvatar: string;
+  endDate: Date;
+  sellerAvatar: string | null;
   sellerName: string;
   price: number;
-  views: number;
+  bids: number;
 }) => {
-  const timeleft = new Date(end).getTime() - new Date().getTime();
+  const timeleft = endDate.getTime() - new Date().getTime();
   const days = Math.floor(timeleft / msPerDay);
   const hours = Math.floor((timeleft % (1000 * 60 * 60 * 24)) / msPerHour);
   const minutes = Math.ceil((timeleft % (1000 * 60 * 60)) / msPerMinute);
@@ -59,7 +59,7 @@ const Listing = ({
       </div>
       <CardHeader>
         <CardTitle>{name}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardDescription className="overflow-ellipsis overflow-clip">{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         {timeleft <= 0 ? (
@@ -76,7 +76,7 @@ const Listing = ({
         )}
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src={sellerAvatar} />
+            <AvatarImage src={sellerAvatar || undefined} />
             <AvatarFallback className="flex h-full w-full items-center justify-center bg-secondary">
               S
             </AvatarFallback>
@@ -87,10 +87,10 @@ const Listing = ({
       <CardFooter className="flex items-center justify-between">
         <div className="flex flex-col gap-1">
           <p className="text-lg font-bold">{price.toLocaleString()}</p>
-          <p className="text-sm text-muted-foreground">latest bid</p>
+          <p className="text-sm text-muted-foreground">current price</p>
         </div>
         <div className="text-muted-foreground">
-          {views} {views == 1 ? "view" : "views"}
+          {bids} {bids == 1 ? "bid" : "bids"}
         </div>
       </CardFooter>
     </Card>
