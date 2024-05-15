@@ -13,7 +13,7 @@ const SearchBar = ({
   callback?: MouseEventHandler<HTMLButtonElement>;
 }) => {
   return (
-    <div className={cn("flex w-80 items-center gap-2", className)}>
+    <div className={cn("flex w-60 items-center gap-2 sm:w-80", className)}>
       <Input
         type="text"
         className="flex-1 px-3 py-2"

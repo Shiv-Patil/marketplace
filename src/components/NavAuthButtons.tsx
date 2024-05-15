@@ -19,7 +19,7 @@ export const SignOut = () => {
   return (
     <Button
       onClick={() => {
-        signOut();
+        signOut({ redirect: false });
       }}
     >
       Logout

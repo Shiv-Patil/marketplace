@@ -10,8 +10,8 @@ import ThemeToggle from "./ui/theme-toggle";
 const Navbar = () => {
   const { data: session } = useSession();
   return (
-    <nav className="sticky inset-x-0 top-0 z-50 h-16 w-full border-b border-secondary bg-background/75 backdrop-blur-lg transition-all">
-      <MaxWidthDiv className="h-full flex-row items-center justify-between border-b">
+    <nav className="sticky inset-x-0 top-0 z-50 h-16 w-full border-b bg-background/75 backdrop-blur-lg transition-all">
+      <MaxWidthDiv className="h-full flex-row items-center justify-between">
         <div className="flex items-center gap-4 self-stretch">
           <Link href="/" className="flex gap-4 text-lg font-semibold">
             <Image
@@ -21,7 +21,7 @@ const Navbar = () => {
               className="h-8 w-8 object-contain"
               alt="logo"
             />
-            Marketplace
+            <span className="hidden sm:block">Marketplace</span>
           </Link>
           <ThemeToggle />
         </div>
