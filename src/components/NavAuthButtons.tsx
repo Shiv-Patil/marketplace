@@ -1,9 +1,18 @@
 "use client";
 
-import { signIn, signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "./ui/button";
 
-export const SignIn = () => {
+export default function NavAuthButtons() {
+  const { data: session } = useSession();
+  return (
+    <div className="flex h-full items-center gap-4">
+      {session ? <SignOut /> : <SignIn />}
+    </div>
+  );
+}
+
+const SignIn = () => {
   return (
     <Button
       onClick={() => {
@@ -15,7 +24,7 @@ export const SignIn = () => {
   );
 };
 
-export const SignOut = () => {
+const SignOut = () => {
   return (
     <Button
       onClick={() => {

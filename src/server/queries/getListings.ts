@@ -1,5 +1,4 @@
-"use server";
-
+import "server-only";
 import { db } from "@/server/db";
 import {
   Listing as ListingType,
@@ -11,7 +10,7 @@ import {
   media as mediaTable,
   users as usersTable,
 } from "@/server/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export async function getListings() {
   const rows = await db

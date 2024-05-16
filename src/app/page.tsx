@@ -1,50 +1,15 @@
-"use client";
-
-import Listing from "@/components/Listing";
+import { ListingSkeleton } from "@/components/Listing";
+import Listings from "@/components/Listings";
 import Navbar from "@/components/Navbar";
 import MaxWidthDiv from "@/components/layout/MaxWidthDiv";
 import SearchBar from "@/components/ui/SearchBar";
 import { Separator } from "@/components/ui/separator";
-import { getListings, getListingsType } from "@/server/getListings";
-import { SessionProvider } from "next-auth/react";
-import { useEffect, useState } from "react";
-
-function Listings() {
-  const [listings, setListings] = useState<getListingsType>([]);
-  useEffect(() => {
-    (async () => setListings(await getListings()))();
-  }, []);
-
-  return listings.length ? (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-4">
-      {listings.map((e) => (
-        <Listing
-          coverImage={e.media.url}
-          name={e.listing.name}
-          description={e.listing.shortDescription}
-          price={+e.listing.basePrice}
-          sellerAvatar={e.user.image}
-          sellerName={e.user.name}
-          endDate={e.listing.endDate}
-          bids={e.bids.length}
-          key={e.listing.listingId}
-        />
-      ))}
-    </div>
-  ) : (
-    <div className="relative mx-auto h-40 w-40 py-14 text-sm text-secondary-foreground">
-      No listings to show
-    </div>
-  );
-}
+import { Suspense } from "react";
 
 export default function Home() {
   return (
     <>
-      <SessionProvider>
-        <Navbar />
-      </SessionProvider>
-
+      <Navbar />
       <main className="bg-background">
         <MaxWidthDiv>
           <section about="hero" className="flex gap-8 pb-10 pt-20">
@@ -66,7 +31,15 @@ export default function Home() {
           >
             <h1 className="text-xl">Recent listings</h1>
             <Separator />
-            <Listings />
+            <Suspense
+              fallback={
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-4">
+                  <ListingSkeleton />
+                </div>
+              }
+            >
+              <Listings />
+            </Suspense>
           </section>
         </MaxWidthDiv>
       </main>

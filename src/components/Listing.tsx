@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import {
   Card,
@@ -9,6 +11,7 @@ import {
 } from "./ui/card";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { AvatarFallback } from "@radix-ui/react-avatar";
+import { Skeleton } from "./ui/skeleton";
 
 const msPerSecond = 1000;
 const msPerMinute = msPerSecond * 60;
@@ -96,6 +99,27 @@ const Listing = ({
         <div className="text-muted-foreground">
           {bids} {bids == 1 ? "bid" : "bids"}
         </div>
+      </CardFooter>
+    </Card>
+  );
+};
+
+export const ListingSkeleton = () => {
+  return (
+    <Card>
+      <div className="relative m-2 flex h-60 overflow-hidden rounded-lg">
+        <Skeleton className="flex-1" />
+      </div>
+      <CardHeader>
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-8 w-full" />
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <Skeleton className="h-4 w-1/2" />
+        <Skeleton className="h-10 w-full" />
+      </CardContent>
+      <CardFooter className="flex items-center justify-between">
+        <Skeleton className="h-10 w-full" />
       </CardFooter>
     </Card>
   );
