@@ -8,15 +8,15 @@ export default async function Listings() {
     <div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-4">
       {listings.map((e) => (
         <Listing
-          coverImage={e.media.url}
-          name={e.listing.name}
-          description={e.listing.shortDescription}
-          price={+e.listing.basePrice}
-          sellerAvatar={e.user.image}
-          sellerName={e.user.name}
-          endDate={e.listing.endDate}
+          coverImage={e.media.length ? e.media[0].url : ""}
+          name={e.name}
+          description={e.shortDescription}
+          price={+e.basePrice}
+          sellerAvatar={e.seller.image}
+          sellerName={e.seller.name}
+          endDate={e.endDate}
           bids={e.bids.length}
-          key={e.listing.listingId}
+          key={e.listingId}
         />
       ))}
     </div>
