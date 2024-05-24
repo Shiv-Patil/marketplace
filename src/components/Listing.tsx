@@ -12,6 +12,7 @@ import {
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { Skeleton } from "./ui/skeleton";
+import Link from "next/link";
 
 const msPerSecond = 1000;
 const msPerMinute = msPerSecond * 60;
@@ -19,6 +20,7 @@ const msPerHour = msPerMinute * 60;
 const msPerDay = msPerHour * 24;
 
 const Listing = ({
+  id,
   coverImage,
   name,
   description,
@@ -28,6 +30,7 @@ const Listing = ({
   price,
   bids,
 }: {
+  id: number;
   coverImage: string;
   name: string;
   description: string;
@@ -43,64 +46,66 @@ const Listing = ({
   const minutes = Math.ceil((timeleft % (1000 * 60 * 60)) / msPerMinute);
 
   return (
-    <Card>
-      <div className="relative m-2 h-60 overflow-hidden rounded-lg">
-        <Image
-          alt="listing-blur"
-          src={coverImage}
-          fill={true}
-          className="object-fill blur-2xl"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-          placeholder="empty"
-        />
-        <Image
-          alt="listing"
-          src={coverImage}
-          fill={true}
-          className="object-contain"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-          placeholder="empty"
-        />
-      </div>
-      <CardHeader>
-        <CardTitle>{name}</CardTitle>
-        <CardDescription className="overflow-clip overflow-ellipsis">
-          {description}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        {timeleft <= 0 ? (
-          <p className="text-muted-foreground">Ended</p>
-        ) : (
-          <p>
-            {days
-              ? days + (days == 1 ? " day" : " days")
-              : hours
-                ? hours + (hours == 1 ? " hour" : " hours")
-                : minutes + (minutes == 1 ? " minute" : " minutes")}{" "}
-            left
-          </p>
-        )}
-        <div className="flex items-center gap-2">
-          <Avatar>
-            <AvatarImage src={sellerAvatar || undefined} />
-            <AvatarFallback className="flex h-full w-full items-center justify-center bg-secondary">
-              S
-            </AvatarFallback>
-          </Avatar>
-          {sellerName}
+    <Link href={`/listing/${id}`}>
+      <Card>
+        <div className="relative m-2 h-60 overflow-hidden rounded-lg">
+          <Image
+            alt="listing-blur"
+            src={coverImage}
+            fill={true}
+            className="object-fill blur-2xl"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            placeholder="empty"
+          />
+          <Image
+            alt="listing"
+            src={coverImage}
+            fill={true}
+            className="object-contain"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            placeholder="empty"
+          />
         </div>
-      </CardContent>
-      <CardFooter className="flex items-center justify-between">
-        <div className="flex flex-col gap-1">
-          <p className="text-lg font-bold">{price.toLocaleString()}</p>
-          <p className="text-sm text-muted-foreground">current price</p>
-        </div>
-        <div className="text-muted-foreground">
-          {bids} {bids == 1 ? "bid" : "bids"}
-        </div>
-      </CardFooter>
-    </Card>
+        <CardHeader>
+          <CardTitle>{name}</CardTitle>
+          <CardDescription className="overflow-clip overflow-ellipsis">
+            {description}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          {timeleft <= 0 ? (
+            <p className="text-muted-foreground">Ended</p>
+          ) : (
+            <p>
+              {days
+                ? days + (days == 1 ? " day" : " days")
+                : hours
+                  ? hours + (hours == 1 ? " hour" : " hours")
+                  : minutes + (minutes == 1 ? " minute" : " minutes")}{" "}
+              left
+            </p>
+          )}
+          <div className="flex items-center gap-2">
+            <Avatar>
+              <AvatarImage src={sellerAvatar || undefined} />
+              <AvatarFallback className="flex h-full w-full items-center justify-center bg-secondary">
+                S
+              </AvatarFallback>
+            </Avatar>
+            {sellerName}
+          </div>
+        </CardContent>
+        <CardFooter className="flex items-center justify-between">
+          <div className="flex flex-col gap-1">
+            <p className="text-lg font-bold">{price.toLocaleString()}</p>
+            <p className="text-sm text-muted-foreground">current price</p>
+          </div>
+          <div className="text-muted-foreground">
+            {bids} {bids == 1 ? "bid" : "bids"}
+          </div>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 };
 

@@ -8,6 +8,7 @@ export default async function Listings() {
     <div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-4">
       {listings.map((e) => (
         <Listing
+          id={e.listingId}
           coverImage={e.media.length ? e.media[0].url : ""}
           name={e.name}
           description={e.shortDescription}

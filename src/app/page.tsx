@@ -1,6 +1,5 @@
 import { ListingSkeleton } from "@/components/Listing";
 import Listings from "@/components/Listings";
-import Navbar from "@/components/Navbar";
 import MaxWidthDiv from "@/components/layout/MaxWidthDiv";
 import SearchBar from "@/components/ui/SearchBar";
 import { Separator } from "@/components/ui/separator";
@@ -9,7 +8,6 @@ import { Suspense } from "react";
 export default function Home() {
   return (
     <>
-      <Navbar />
       <main className="bg-background">
         <MaxWidthDiv>
           <section about="hero" className="flex gap-8 pb-10 pt-20">
