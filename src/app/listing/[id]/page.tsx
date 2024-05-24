@@ -1,8 +1,6 @@
-import {
-  CarousalElementSkeleton,
-  MediaCarousal,
-} from "@/components/MediaCarousal";
+import { MediaCarousal } from "@/components/MediaCarousal";
 import MaxWidthDiv from "@/components/layout/MaxWidthDiv";
+import { ListingSkeleton } from "@/components/listingpage/Skeletons";
 import { getListing } from "@/server/queries/getListing";
 import { Suspense } from "react";
 
@@ -20,7 +18,8 @@ export default function Listing({
     <>
       <main className="bg-background">
         <MaxWidthDiv>
-          <section
+          <ListingSkeleton />
+          {/* <section
             about="details"
             className="flex flex-col gap-8 pb-10 pt-20 text-white md:flex-row"
           >
@@ -34,7 +33,7 @@ export default function Listing({
             </div>
           </section>
 
-          <section about="bids" className="flex flex-col gap-4 py-10"></section>
+          <section about="bids" className="flex flex-col gap-4 py-10"></section> */}
         </MaxWidthDiv>
       </main>
     </>

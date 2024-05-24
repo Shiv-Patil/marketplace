@@ -1,5 +1,5 @@
-import { ListingSkeleton } from "@/components/Listing";
-import Listings from "@/components/Listings";
+import { ListingSkeleton } from "@/components/homepage/Listing";
+import Listings from "@/components/homepage/Listings";
 import MaxWidthDiv from "@/components/layout/MaxWidthDiv";
 import SearchBar from "@/components/ui/SearchBar";
 import { Separator } from "@/components/ui/separator";
