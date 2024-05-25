@@ -40,10 +40,10 @@ function BidRow({
         </Avatar>
         <span className="hidden md:block">{bidderName}</span>
       </TableCell>
-      <TableCell className="opacity-50" suppressHydrationWarning>
+      <TableCell className="" suppressHydrationWarning>
         {bidDate.toLocaleDateString()}
       </TableCell>
-      <TableCell className="text-right opacity-50">₹{bidPrice}</TableCell>
+      <TableCell className="text-right">₹{bidPrice}</TableCell>
     </TableRow>
   );
 }
