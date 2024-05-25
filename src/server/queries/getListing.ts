@@ -10,7 +10,14 @@ export async function getListing(id: number) {
     with: {
       seller: true,
       media: true,
-      bids: true,
+      bids: {
+        orderBy(fields, operators) {
+          return operators.desc(fields.amount);
+        },
+        with: {
+          bidder: true,
+        },
+      },
     },
     where: eq(listings.listingId, id),
   });

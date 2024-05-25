@@ -54,7 +54,7 @@ const Listing = ({
             src={coverImage}
             fill={true}
             className="object-fill blur-2xl"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 40vw, 250px"
             placeholder="empty"
           />
           <Image
@@ -62,7 +62,7 @@ const Listing = ({
             src={coverImage}
             fill={true}
             className="object-contain"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 40vw, 250px"
             placeholder="empty"
           />
         </div>

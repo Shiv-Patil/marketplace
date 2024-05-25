@@ -14,7 +14,7 @@ const Navbar = () => {
         <div className="flex items-center gap-4 self-stretch">
           <Link href="/" className="flex gap-4 text-lg font-semibold">
             <Image
-              src="logo.svg"
+              src="/logo.svg"
               height={32}
               width={32}
               className="h-8 w-8 object-contain"

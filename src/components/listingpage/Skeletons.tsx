@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CarousalElementSkeleton } from "../MediaCarousal";
+import { CarousalElementSkeleton } from "./MediaCarousal";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Skeleton } from "../ui/skeleton";
@@ -49,6 +49,10 @@ export function ListingSkeleton() {
           <Separator />
           <Skeleton className="h-36" />
           <div className="h-4" />
+          <div className="flex flex-col text-foreground">
+            <span className="text-2xl">$69.00</span>
+            <span className="text-sm text-muted-foreground">current price</span>
+          </div>
           <Button
             variant="outline"
             className="text-lg text-foreground"
