@@ -19,7 +19,7 @@ const SearchBar = ({
         className="flex-1 px-3 py-2"
         placeholder={placeholder || "Search..."}
       />
-      <Button className="px-2 py-2" onClick={callback}>
+      <Button className="px-2 py-2" onClick={callback} variant="outline">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

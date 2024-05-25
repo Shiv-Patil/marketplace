@@ -6,7 +6,7 @@ import { listings } from "../db/schema";
 export async function getListing(id: number) {
   "use server";
   if (isNaN(id)) return null;
-  return await db.query.listings.findFirst({
+  const data = await db.query.listings.findFirst({
     with: {
       seller: true,
       media: true,
@@ -21,4 +21,7 @@ export async function getListing(id: number) {
     },
     where: eq(listings.listingId, id),
   });
+  const timeleft = data ? data.endDate.getTime() - new Date().getTime() : 0;
+  if (timeleft <= 0 && data) data.status = "expired";
+  return data;
 }

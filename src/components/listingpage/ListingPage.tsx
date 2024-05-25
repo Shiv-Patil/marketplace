@@ -17,6 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Badge } from "../ui/badge";
+import { getTimeLeftString } from "@/lib/utils";
 
 function BidRow({
   bidderImage,
@@ -60,7 +62,7 @@ export default function ListingPage({
     <>
       <section
         about="details"
-        className="flex flex-col gap-8 pb-10 pt-12 text-white md:flex-row"
+        className="flex flex-col gap-8 pb-10 pt-12 text-white md:flex-row md:items-start"
       >
         <div className="flex flex-col gap-2 md:flex-1 lg:flex-[1.5] lg:flex-row-reverse">
           <div className="relative aspect-square lg:flex-1">
@@ -110,9 +112,12 @@ export default function ListingPage({
             {data.seller.name}
           </div>
           <Separator />
-          <h4 className="text-ellipsis text-sm text-muted-foreground">
-            Seller description
-          </h4>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-ellipsis text-muted-foreground">
+              Seller description
+            </span>
+            <Badge variant="outline">{data.status}</Badge>
+          </div>
           <h4 className="text-ellipsis">{data.longDescription}</h4>
           <div className="h-4" />
           <div className="flex flex-col text-foreground">
@@ -126,8 +131,15 @@ export default function ListingPage({
               })}
             </span>
             <span className="text-sm text-muted-foreground">current price</span>
+            <span className="py-2 text-sm text-muted-foreground">
+              {getTimeLeftString(data.endDate)}
+            </span>
           </div>
-          <Button variant="outline" className="text-lg text-foreground">
+          <Button
+            variant="outline"
+            className="text-lg text-foreground"
+            disabled={data.status != "active"}
+          >
             Make an offer
           </Button>
         </div>
