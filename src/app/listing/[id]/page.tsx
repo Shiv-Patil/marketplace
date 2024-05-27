@@ -6,6 +6,7 @@ import { Suspense } from "react";
 
 async function ListingPageWrapper({ listingId }: { listingId: number }) {
   const data = await getListing(listingId);
+  if (!data) return <ListingSkeleton />;
   return <ListingPage data={data} />;
 }
 

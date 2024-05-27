@@ -22,6 +22,7 @@ import { NewBidButton } from "./NewBid";
 import { signIn, useSession } from "next-auth/react";
 import { Button } from "../ui/button";
 import { toDecimal } from "dinero.js";
+import assert from "assert";
 
 function getFormattedVal(val: string) {
   const amt = getScaledValueFromString(val);
@@ -69,10 +70,9 @@ export default function ListingPage({
 }: {
   data: Awaited<ReturnType<typeof getListing>>;
 }) {
+  assert(data);
   const [selectedMedia, setSelectedMedia] = useState(0);
   const media = data?.media && data.media.length ? data.media : null;
-  if (!data) return <ListingSkeleton />;
-
   const currentPrice = data.bids.length ? data.bids[0].amount : data.basePrice;
   const { status: authStatus } = useSession();
   const NewBidButtonWithAuth =
