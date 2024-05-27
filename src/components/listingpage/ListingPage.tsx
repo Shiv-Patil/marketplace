@@ -7,7 +7,6 @@ import { CarousalElement, CarousalElementSkeleton } from "./MediaCarousal";
 import { ListingSkeleton } from "./Skeletons";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
 import {
   Table,
   TableBody,
@@ -165,6 +164,13 @@ export default function ListingPage({
                 key={index}
               />
             ))}
+            <BidRow
+              key={-1}
+              bidDate={data.startDate}
+              bidPrice={data.basePrice}
+              bidderImage={data.seller.image}
+              bidderName="Starting bid"
+            />
           </TableBody>
         </Table>
       </section>

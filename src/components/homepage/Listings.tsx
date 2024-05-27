@@ -1,5 +1,7 @@
 import { getListings } from "@/server/queries/getListings";
 import Listing from "./Listing";
+import { getScaledValueFromString } from "@/lib/utils";
+import { toDecimal } from "dinero.js";
 
 export default async function Listings() {
   const listings = await getListings();
@@ -12,7 +14,12 @@ export default async function Listings() {
           coverImage={e.media.length ? e.media[0].url : ""}
           name={e.name}
           description={e.shortDescription}
-          price={+e.basePrice}
+          price={(() => {
+            const val = getScaledValueFromString(
+              e.bids.length ? e.bids[0].amount : e.basePrice
+            );
+            return val ? Number(toDecimal(val)) : val;
+          })()}
           sellerAvatar={e.seller.image}
           sellerName={e.seller.name}
           endDate={e.endDate}

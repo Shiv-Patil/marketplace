@@ -37,7 +37,7 @@ const Listing = ({
   endDate: Date;
   sellerAvatar: string | null;
   sellerName: string;
-  price: number;
+  price: null | number;
   bids: number;
 }) => {
   const timeleft = endDate.getTime() - new Date().getTime();
@@ -97,7 +97,14 @@ const Listing = ({
         </CardContent>
         <CardFooter className="flex items-center justify-between">
           <div className="flex flex-col gap-1">
-            <p className="text-lg font-bold">{price.toLocaleString()}</p>
+            <p className="text-lg font-bold">
+              {price
+                ? Number(price).toLocaleString("en-IN", {
+                    style: "currency",
+                    currency: "INR",
+                  })
+                : NaN}
+            </p>
             <p className="text-sm text-muted-foreground">current price</p>
           </div>
           <div className="text-muted-foreground">

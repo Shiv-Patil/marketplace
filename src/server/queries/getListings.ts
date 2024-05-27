@@ -10,7 +10,11 @@ export async function getListings() {
       media: {
         limit: 1,
       },
-      bids: true,
+      bids: {
+        orderBy(fields, operators) {
+          return operators.desc(fields.amount);
+        },
+      },
     },
   });
 }
