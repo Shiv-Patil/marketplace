@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/Navbar";
+import { SessionProvider } from "next-auth/react";
+import Providers from "@/components/Providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,9 +23,11 @@ export default function RootLayout({
     <html suppressHydrationWarning={true} lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" disableTransitionOnChange>
-          <Toaster />
-          <Navbar />
-          {children}
+          <Providers>
+            <Toaster />
+            <Navbar />
+            {children}
+          </Providers>
         </ThemeProvider>
       </body>
     </html>

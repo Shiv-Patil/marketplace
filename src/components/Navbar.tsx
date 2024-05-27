@@ -25,9 +25,7 @@ const Navbar = () => {
           <ThemeToggle />
         </div>
 
-        <SessionProvider>
-          <NavAuthButtons />
-        </SessionProvider>
+        <NavAuthButtons />
       </MaxWidthDiv>
     </nav>
   );

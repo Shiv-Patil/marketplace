@@ -17,7 +17,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "../ui/badge";
-import { getTimeLeftString } from "@/lib/utils";
+import { getScaledValueFromString, getTimeLeftString } from "@/lib/utils";
+import { NewBidButton } from "./NewBid";
+import { signIn, useSession } from "next-auth/react";
+import { Button } from "../ui/button";
+import { toDecimal } from "dinero.js";
+
+function getFormattedVal(val: string) {
+  const amt = getScaledValueFromString(val);
+  if (!amt) return "NaN";
+  return Number(toDecimal(amt)).toLocaleString("en-IN", {
+    style: "currency",
+    currency: "INR",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 4,
+  });
+}
 
 function BidRow({
   bidderImage,
@@ -44,7 +59,7 @@ function BidRow({
       <TableCell className="" suppressHydrationWarning>
         {bidDate.toLocaleDateString()}
       </TableCell>
-      <TableCell className="text-right">₹{bidPrice}</TableCell>
+      <TableCell className="text-right">{bidPrice}</TableCell>
     </TableRow>
   );
 }
@@ -57,6 +72,24 @@ export default function ListingPage({
   const [selectedMedia, setSelectedMedia] = useState(0);
   const media = data?.media && data.media.length ? data.media : null;
   if (!data) return <ListingSkeleton />;
+
+  const currentPrice = data.bids.length ? data.bids[0].amount : data.basePrice;
+  const { status: authStatus } = useSession();
+  const NewBidButtonWithAuth =
+    authStatus === "authenticated" ? (
+      <NewBidButton
+        disabled={data.status != "active"}
+        currentPrice={currentPrice}
+      />
+    ) : (
+      <Button
+        variant="outline"
+        className="text-lg text-foreground"
+        onClick={() => signIn("google")}
+      >
+        Make an offer
+      </Button>
+    );
   return (
     <>
       <section
@@ -120,27 +153,13 @@ export default function ListingPage({
           <h4 className="text-ellipsis">{data.longDescription}</h4>
           <div className="h-4" />
           <div className="flex flex-col text-foreground">
-            <span className="text-2xl">
-              ₹
-              {(+(data.bids.length
-                ? data.bids[0].amount
-                : data.basePrice)).toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 4,
-              })}
-            </span>
+            <span className="text-2xl">{getFormattedVal(currentPrice)}</span>
             <span className="text-sm text-muted-foreground">current price</span>
             <span className="py-2 text-sm text-muted-foreground">
               {getTimeLeftString(data.endDate)}
             </span>
           </div>
-          <Button
-            variant="outline"
-            className="text-lg text-foreground"
-            disabled={data.status != "active"}
-          >
-            Make an offer
-          </Button>
+          {NewBidButtonWithAuth}
         </div>
       </section>
 
@@ -158,7 +177,7 @@ export default function ListingPage({
             {data.bids.map((el, index) => (
               <BidRow
                 bidDate={el.bidDate}
-                bidPrice={el.amount}
+                bidPrice={getFormattedVal(el.amount)}
                 bidderImage={el.bidder.image}
                 bidderName={el.bidder.name}
                 key={index}
@@ -167,7 +186,7 @@ export default function ListingPage({
             <BidRow
               key={-1}
               bidDate={data.startDate}
-              bidPrice={data.basePrice}
+              bidPrice={getFormattedVal(data.basePrice)}
               bidderImage={data.seller.image}
               bidderName="Starting bid"
             />

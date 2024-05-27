@@ -4,10 +4,10 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "./ui/button";
 
 export default function NavAuthButtons() {
-  const { data: session } = useSession();
+  const { status } = useSession();
   return (
     <div className="flex h-full items-center gap-4">
-      {session ? <SignOut /> : <SignIn />}
+      {status === "authenticated" ? <SignOut /> : <SignIn />}
     </div>
   );
 }
