@@ -33,11 +33,9 @@ import { toast } from "../ui/use-toast";
 export function NewBidButton({
   listingId,
   currentPrice,
-  disabled,
 }: {
   listingId: number;
   currentPrice: string;
-  disabled: boolean;
 }) {
   const { formSchema, minPriceDinero } = getSchema(currentPrice);
 
@@ -76,11 +74,7 @@ export function NewBidButton({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="text-lg text-foreground"
-          disabled={disabled}
-        >
+        <Button variant="outline" className="text-lg text-foreground">
           Make an offer
         </Button>
       </DialogTrigger>

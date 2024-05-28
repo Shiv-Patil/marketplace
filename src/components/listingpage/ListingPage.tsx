@@ -71,10 +71,10 @@ export default function ListingPage({ data }: { data: getListingType }) {
   const media = data?.media && data.media.length ? data.media : null;
   const { status: authStatus, data: authData } = useSession();
   const NewBidButtonWithAuth =
-    authStatus === "authenticated" && data.sellerId !== authData.user.id ? (
+    data.status !== "active" ? null : authStatus === "authenticated" &&
+      data.sellerId !== authData.user.id ? (
       <NewBidButton
         listingId={data.listingId}
-        disabled={data.status != "active"}
         currentPrice={data.currentPrice}
       />
     ) : (
