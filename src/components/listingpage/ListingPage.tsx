@@ -16,24 +16,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "../ui/badge";
-import { parseToDinero, getTimeLeftString } from "@/lib/utils";
+import { getFormattedAmount, getTimeLeftString } from "@/lib/utils";
 import { NewBidButton } from "./NewBid";
 import { signIn, useSession } from "next-auth/react";
 import { Button } from "../ui/button";
-import { toDecimal } from "dinero.js";
 import assert from "assert";
-import { toast } from "../ui/use-toast";
-
-function getFormattedVal(val: string) {
-  const amt = parseToDinero(val);
-  if (!amt) return "NaN";
-  return Number(toDecimal(amt)).toLocaleString("en-IN", {
-    style: "currency",
-    currency: "INR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 4,
-  });
-}
+import CloseListingButton from "./CloseListing";
 
 function BidRow({
   bidderImage,
@@ -71,8 +59,7 @@ export default function ListingPage({ data }: { data: getListingType }) {
   const media = data?.media && data.media.length ? data.media : null;
   const { status: authStatus, data: authData } = useSession();
   const NewBidButtonWithAuth =
-    data.status !== "active" ? null : authStatus === "authenticated" &&
-      data.sellerId !== authData.user.id ? (
+    authStatus === "authenticated" ? (
       <NewBidButton
         listingId={data.listingId}
         currentPrice={data.currentPrice}
@@ -80,16 +67,8 @@ export default function ListingPage({ data }: { data: getListingType }) {
     ) : (
       <Button
         variant="outline"
-        className="text-lg text-foreground"
-        onClick={() =>
-          authStatus !== "authenticated"
-            ? signIn("google")
-            : toast({
-                title: "Error",
-                description: "Seller cannot place bids",
-                variant: "destructive",
-              })
-        }
+        className="text-lg"
+        onClick={() => signIn("google")}
       >
         Make an offer
       </Button>
@@ -158,14 +137,19 @@ export default function ListingPage({ data }: { data: getListingType }) {
           <div className="h-4" />
           <div className="flex flex-col text-foreground">
             <span className="text-2xl">
-              {getFormattedVal(data.currentPrice)}
+              {getFormattedAmount(data.currentPrice)}
             </span>
             <span className="text-sm text-muted-foreground">current price</span>
             <span className="py-2 text-sm text-muted-foreground">
-              {getTimeLeftString(data.endDate)}
+              {getTimeLeftString(data.endDate, data.status === "expired")}
             </span>
           </div>
-          {NewBidButtonWithAuth}
+          {data.status === "expired" ? null : authData?.user.id ===
+            data.sellerId ? (
+            <CloseListingButton listingId={data.listingId} />
+          ) : (
+            NewBidButtonWithAuth
+          )}
         </div>
       </section>
 
@@ -183,7 +167,7 @@ export default function ListingPage({ data }: { data: getListingType }) {
             {data.bids.map((el, index) => (
               <BidRow
                 bidDate={el.bidDate}
-                bidPrice={getFormattedVal(el.amount)}
+                bidPrice={getFormattedAmount(el.amount)}
                 bidderImage={el.bidder.image}
                 bidderName={el.bidder.name}
                 key={index}
@@ -192,7 +176,7 @@ export default function ListingPage({ data }: { data: getListingType }) {
             <BidRow
               key={-1}
               bidDate={data.startDate}
-              bidPrice={getFormattedVal(data.basePrice)}
+              bidPrice={getFormattedAmount(data.basePrice)}
               bidderImage={data.seller.image}
               bidderName="Starting bid"
             />

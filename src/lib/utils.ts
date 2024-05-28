@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { INR, type Currency } from "@dinero.js/currencies";
-import { dinero } from "dinero.js";
+import { dinero, toDecimal } from "dinero.js";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -12,12 +12,12 @@ const msPerMinute = msPerSecond * 60;
 const msPerHour = msPerMinute * 60;
 const msPerDay = msPerHour * 24;
 
-export function getTimeLeftString(endDate: Date) {
+export function getTimeLeftString(endDate: Date, expired?: boolean) {
   const timeleft = endDate.getTime() - new Date().getTime();
   const days = Math.floor(timeleft / msPerDay);
   const hours = Math.floor((timeleft % (1000 * 60 * 60 * 24)) / msPerHour);
   const minutes = Math.ceil((timeleft % (1000 * 60 * 60)) / msPerMinute);
-  return timeleft <= 0
+  return timeleft <= 0 || expired
     ? "Ended"
     : (days
         ? days + (days == 1 ? " day" : " days")
@@ -60,4 +60,15 @@ export function parseToDinero(val: string, currency?: Currency<number>) {
   } catch {
     return null;
   }
+}
+
+export function getFormattedAmount(val: string) {
+  const amt = parseToDinero(val);
+  if (!amt) return "NaN";
+  return Number(toDecimal(amt)).toLocaleString("en-IN", {
+    style: "currency",
+    currency: "INR",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 4,
+  });
 }

@@ -1,29 +1,13 @@
 import { getListings } from "@/server/queries/get_listings";
 import Listing from "./Listing";
-import { parseToDinero } from "@/lib/utils";
-import { toDecimal } from "dinero.js";
 
 export default async function Listings() {
   const listings = await getListings();
 
   return listings.length ? (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-4">
-      {listings.map((e) => (
-        <Listing
-          id={e.listingId}
-          coverImage={e.media.length ? e.media[0].url : ""}
-          name={e.name}
-          description={e.shortDescription}
-          price={(() => {
-            const val = parseToDinero(e.currentPrice);
-            return val ? Number(toDecimal(val)) : val;
-          })()}
-          sellerAvatar={e.seller.image}
-          sellerName={e.seller.name}
-          endDate={e.endDate}
-          bids={e.bids.length}
-          key={e.listingId}
-        />
+      {listings.map((e, index) => (
+        <Listing data={e} key={index} />
       ))}
     </div>
   ) : (

@@ -27,4 +27,4 @@ export async function getListings() {
   });
 }
 
-export type getListingType = Awaited<ReturnType<typeof getListings>>;
+export type getListingsType = Awaited<ReturnType<typeof getListings>>;
