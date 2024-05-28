@@ -1,8 +1,8 @@
+"use server";
 import "server-only";
 import { db } from "@/server/db";
 
 export async function getListings() {
-  "use server";
   const data = await db.query.listings.findMany({
     orderBy: (listings, { desc }) => [desc(listings.startDate)],
     with: {

@@ -1,6 +1,6 @@
-import MaxWidthDiv from "@/components/layout/MaxWidthDiv";
+import MaxWidthDiv from "@/components/MaxWidthDiv";
 import ListingPage from "@/components/listingpage/ListingPage";
-import { ListingSkeleton } from "@/components/listingpage/Skeletons";
+import ListingSkeleton from "@/components/listingpage/Skeletons";
 import { getListing } from "@/server/queries/get_listing";
 import { Suspense } from "react";
 

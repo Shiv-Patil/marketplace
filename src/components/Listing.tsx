@@ -8,10 +8,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { Avatar, AvatarImage } from "../ui/avatar";
+} from "@/components/ui/card";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { AvatarFallback } from "@radix-ui/react-avatar";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { getListingsType } from "@/server/queries/get_listings";
 import { getFormattedAmount } from "@/lib/utils";
@@ -102,10 +102,10 @@ export const ListingSkeleton = () => {
         <Skeleton className="flex-1" />
       </div>
       <CardHeader>
-        <Skeleton className="h-4 w-full" />
         <Skeleton className="h-8 w-full" />
+        <Skeleton className="h-4 w-full" />
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="flex flex-col gap-2">
         <Skeleton className="h-4 w-1/2" />
         <Skeleton className="h-10 w-full" />
       </CardContent>

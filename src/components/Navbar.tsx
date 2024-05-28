@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import MaxWidthDiv from "./layout/MaxWidthDiv";
+import MaxWidthDiv from "@/components/MaxWidthDiv";
 import Image from "next/image";
 import NavAuthButtons from "./NavAuthButtons";
 import ThemeToggle from "./ui/theme-toggle";
-import { SessionProvider } from "next-auth/react";
 
 const Navbar = () => {
   return (

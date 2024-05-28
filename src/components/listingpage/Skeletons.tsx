@@ -9,12 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CarousalElementSkeleton } from "./MediaCarousal";
-import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Skeleton } from "../ui/skeleton";
 
-function BidRowSkeleton() {
+export function BidRowSkeleton() {
   return (
     <TableRow>
       <TableCell className="flex gap-4 font-medium">
@@ -27,7 +25,11 @@ function BidRowSkeleton() {
   );
 }
 
-export function ListingSkeleton() {
+export function CarousalElementSkeleton() {
+  return <Skeleton className="aspect-square h-16" />;
+}
+
+export default function ListingSkeleton() {
   return (
     <>
       <section
@@ -43,23 +45,11 @@ export function ListingSkeleton() {
         </div>
 
         <div className="flex flex-col gap-4 md:flex-1">
-          <Skeleton className="h-8" />
+          <Skeleton className="h-14" />
           <Separator />
-          <Skeleton className="h-12" />
+          <Skeleton className="h-10" />
           <Separator />
-          <Skeleton className="h-36" />
-          <div className="h-4" />
-          <div className="flex flex-col text-foreground">
-            <span className="text-2xl">$69.00</span>
-            <span className="text-sm text-muted-foreground">current price</span>
-          </div>
-          <Button
-            variant="outline"
-            className="text-lg text-foreground"
-            disabled
-          >
-            Make an offer
-          </Button>
+          <Skeleton className="h-44" />
         </div>
       </section>
 

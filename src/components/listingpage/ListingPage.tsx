@@ -3,7 +3,6 @@
 import { type getListingType } from "@/server/queries/get_listing";
 import Image from "next/image";
 import { useState } from "react";
-import { CarousalElement, CarousalElementSkeleton } from "./MediaCarousal";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
@@ -22,6 +21,38 @@ import { signIn, useSession } from "next-auth/react";
 import { Button } from "../ui/button";
 import assert from "assert";
 import CloseListingButton from "./CloseListing";
+import { CarousalElementSkeleton } from "./Skeletons";
+import Link from "next/link";
+
+function CarousalElement({
+  id,
+  selected,
+  mediaURL,
+  onClick,
+}: {
+  id: number;
+  selected: number;
+  mediaURL: string;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}) {
+  return (
+    <button
+      className={
+        "relative aspect-square h-16 rounded-md border-foreground " +
+        (selected === id ? "border-2 p-2" : "hover:border")
+      }
+      onClick={onClick}
+    >
+      <Image
+        alt="media"
+        src={mediaURL}
+        fill={true}
+        className="object-contain"
+        sizes="64px"
+      />
+    </button>
+  );
+}
 
 function BidRow({
   bidderImage,
@@ -112,12 +143,17 @@ export default function ListingPage({ data }: { data: getListingType }) {
         </div>
 
         <div className="flex flex-col gap-4 md:flex-1">
-          <h3 className="text-ellipsis text-2xl">{data.name}</h3>
-          <h4 className="text-ellipsis text-muted-foreground">
-            {data.shortDescription}
-          </h4>
+          <div className="flex flex-col gap-1">
+            <h3 className="text-ellipsis text-2xl">{data.name}</h3>
+            <h4 className="text-ellipsis text-muted-foreground">
+              {data.shortDescription}
+            </h4>
+          </div>
           <Separator />
-          <div className="flex items-center gap-2">
+          <Link
+            className="flex items-center gap-2"
+            href={`/user/${data.sellerId}`}
+          >
             <Avatar>
               <AvatarImage src={data.seller.image || undefined} />
               <AvatarFallback className="flex h-full w-full items-center justify-center bg-secondary">
@@ -125,7 +161,7 @@ export default function ListingPage({ data }: { data: getListingType }) {
               </AvatarFallback>
             </Avatar>
             {data.seller.name}
-          </div>
+          </Link>
           <Separator />
           <div className="flex items-center justify-between text-sm">
             <span className="text-ellipsis text-muted-foreground">
