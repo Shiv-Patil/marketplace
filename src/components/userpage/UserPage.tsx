@@ -46,7 +46,7 @@ export default function UserPage({ data }: { data: getUserType }) {
           <h1 className="text-xl">User listings</h1>
           {isSelf ? (
             <Link
-              href="/new"
+              href="/new/"
               className={cn(
                 "flex items-center gap-2",
                 buttonVariants({ variant: "outline" })

@@ -30,6 +30,7 @@ export default function RootLayout({
             <Navbar />
             {children}
             {modal}
+            <div id="modal-root" />
           </Providers>
         </ThemeProvider>
       </body>
