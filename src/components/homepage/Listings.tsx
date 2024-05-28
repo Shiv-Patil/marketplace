@@ -1,6 +1,6 @@
-import { getListings } from "@/server/queries/getListings";
+import { getListings } from "@/server/queries/get_listings";
 import Listing from "./Listing";
-import { getScaledValueFromString } from "@/lib/utils";
+import { parseToDinero } from "@/lib/utils";
 import { toDecimal } from "dinero.js";
 
 export default async function Listings() {
@@ -15,9 +15,7 @@ export default async function Listings() {
           name={e.name}
           description={e.shortDescription}
           price={(() => {
-            const val = getScaledValueFromString(
-              e.bids.length ? e.bids[0].amount : e.basePrice
-            );
+            const val = parseToDinero(e.currentPrice);
             return val ? Number(toDecimal(val)) : val;
           })()}
           sellerAvatar={e.seller.image}

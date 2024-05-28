@@ -44,19 +44,19 @@ export function getIncrement(val: number): number {
   return 0;
 }
 
-export function getScaledValueFromString(
-  val: string,
-  currency?: Currency<number>
-) {
+export function parseToDinero(val: string, currency?: Currency<number>) {
   if (!currency) currency = INR;
-  let scale = undefined;
+  if (typeof val !== "string") val = `${val}`;
+  let scale = 0;
   let _decimalIndex = val.indexOf(".");
   if (_decimalIndex !== -1) {
     val = val.slice(0, _decimalIndex) + val.slice(_decimalIndex + 1);
-    scale = val.length - _decimalIndex + currency.exponent;
+    scale = val.length - _decimalIndex;
   }
+  const amount = +val;
+  if (isNaN(amount) || amount > 1000000) return null;
   try {
-    return dinero({ amount: +val, currency, scale });
+    return dinero({ amount, currency, scale });
   } catch {
     return null;
   }

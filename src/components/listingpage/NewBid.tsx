@@ -1,7 +1,6 @@
 "use client";
 
-import { Button, ButtonProps } from "@/components/ui/button";
-import { getIncrement } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -21,38 +20,61 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const formSchema = z.object({
-  bid: z.coerce
-    .number()
-    .min(21, `Amount must be greater than or equal to ${21 + getIncrement(21)}`)
-    .max(69, "Amount must be less than or equal to 69"),
-});
+import { toDecimal } from "dinero.js";
+import getSchema, { schemaType } from "@/lib/input_schemas/new_bid";
+import { useMutation } from "@tanstack/react-query";
+import placeBid from "@/server/db/mutations/place_bid";
+import { toast } from "../ui/use-toast";
 
 export function NewBidButton({
+  listingId,
   currentPrice,
   disabled,
 }: {
+  listingId: number;
   currentPrice: string;
   disabled: boolean;
 }) {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const { formSchema, minPriceDinero } = getSchema(currentPrice);
+
+  const form = useForm<schemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      bid: 0,
+      bid: Number(toDecimal(minPriceDinero)).toString(),
+      listingId,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  const { mutate, error, isPending } = useMutation({
+    mutationFn: placeBid,
+    onError: (err) => {
+      toast({
+        title: "Error",
+        description: err.message,
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      setOpen(false);
+      toast({
+        title: "Success",
+        description: "Placed bid successfully!",
+      });
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    mutate(data);
   }
 
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
@@ -76,7 +98,7 @@ export function NewBidButton({
                 <FormItem>
                   <FormLabel>Bid</FormLabel>
                   <FormControl>
-                    <Input type="number" step={50} placeholder="0" {...field} />
+                    <Input type="number" step="any" {...field} />
                   </FormControl>
                   <FormDescription>Enter the offer amount</FormDescription>
                   <FormMessage />
@@ -85,7 +107,9 @@ export function NewBidButton({
             />
 
             <DialogFooter>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={isPending}>
+                Submit
+              </Button>
             </DialogFooter>
           </form>
         </Form>

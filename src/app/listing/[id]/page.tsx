@@ -1,7 +1,7 @@
 import MaxWidthDiv from "@/components/layout/MaxWidthDiv";
 import ListingPage from "@/components/listingpage/ListingPage";
 import { ListingSkeleton } from "@/components/listingpage/Skeletons";
-import { getListing } from "@/server/queries/getListing";
+import { getListing } from "@/server/queries/get_listing";
 import { Suspense } from "react";
 
 async function ListingPageWrapper({ listingId }: { listingId: number }) {

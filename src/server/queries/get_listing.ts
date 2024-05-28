@@ -12,7 +12,7 @@ export async function getListing(id: number) {
       media: true,
       bids: {
         orderBy(fields, operators) {
-          return operators.desc(fields.amount);
+          return operators.desc(fields.bidDate);
         },
         with: {
           bidder: true,
@@ -23,5 +23,12 @@ export async function getListing(id: number) {
   });
   const timeleft = data ? data.endDate.getTime() - new Date().getTime() : 0;
   if (timeleft <= 0 && data) data.status = "expired";
-  return data;
+  return data
+    ? {
+        currentPrice: data.bids.length ? data.bids[0].amount : data.basePrice,
+        ...data,
+      }
+    : undefined;
 }
+
+export type getListingType = Awaited<ReturnType<typeof getListing>>;

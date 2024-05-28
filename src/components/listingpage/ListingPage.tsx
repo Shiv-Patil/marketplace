@@ -1,10 +1,9 @@
 "use client";
 
-import { getListing } from "@/server/queries/getListing";
+import { type getListingType } from "@/server/queries/get_listing";
 import Image from "next/image";
 import { useState } from "react";
 import { CarousalElement, CarousalElementSkeleton } from "./MediaCarousal";
-import { ListingSkeleton } from "./Skeletons";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
@@ -17,15 +16,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "../ui/badge";
-import { getScaledValueFromString, getTimeLeftString } from "@/lib/utils";
+import { parseToDinero, getTimeLeftString } from "@/lib/utils";
 import { NewBidButton } from "./NewBid";
 import { signIn, useSession } from "next-auth/react";
 import { Button } from "../ui/button";
 import { toDecimal } from "dinero.js";
 import assert from "assert";
+import { toast } from "../ui/use-toast";
 
 function getFormattedVal(val: string) {
-  const amt = getScaledValueFromString(val);
+  const amt = parseToDinero(val);
   if (!amt) return "NaN";
   return Number(toDecimal(amt)).toLocaleString("en-IN", {
     style: "currency",
@@ -65,27 +65,31 @@ function BidRow({
   );
 }
 
-export default function ListingPage({
-  data,
-}: {
-  data: Awaited<ReturnType<typeof getListing>>;
-}) {
+export default function ListingPage({ data }: { data: getListingType }) {
   assert(data);
   const [selectedMedia, setSelectedMedia] = useState(0);
   const media = data?.media && data.media.length ? data.media : null;
-  const currentPrice = data.bids.length ? data.bids[0].amount : data.basePrice;
-  const { status: authStatus } = useSession();
+  const { status: authStatus, data: authData } = useSession();
   const NewBidButtonWithAuth =
-    authStatus === "authenticated" ? (
+    authStatus === "authenticated" && data.sellerId !== authData.user.id ? (
       <NewBidButton
+        listingId={data.listingId}
         disabled={data.status != "active"}
-        currentPrice={currentPrice}
+        currentPrice={data.currentPrice}
       />
     ) : (
       <Button
         variant="outline"
         className="text-lg text-foreground"
-        onClick={() => signIn("google")}
+        onClick={() =>
+          authStatus !== "authenticated"
+            ? signIn("google")
+            : toast({
+                title: "Error",
+                description: "Seller cannot place bids",
+                variant: "destructive",
+              })
+        }
       >
         Make an offer
       </Button>
@@ -153,7 +157,9 @@ export default function ListingPage({
           <h4 className="text-ellipsis">{data.longDescription}</h4>
           <div className="h-4" />
           <div className="flex flex-col text-foreground">
-            <span className="text-2xl">{getFormattedVal(currentPrice)}</span>
+            <span className="text-2xl">
+              {getFormattedVal(data.currentPrice)}
+            </span>
             <span className="text-sm text-muted-foreground">current price</span>
             <span className="py-2 text-sm text-muted-foreground">
               {getTimeLeftString(data.endDate)}
