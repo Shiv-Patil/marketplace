@@ -1,10 +1,10 @@
-import NewPage from "@/components/newpage/NewPage";
 import { Modal } from "./modal";
+import NewPageWrapperSuspense from "@/components/newpage/Wrapper";
 
 export default function NewListingModal() {
   return (
     <Modal>
-      <NewPage />
+      <NewPageWrapperSuspense />
     </Modal>
   );
 }

@@ -9,6 +9,7 @@ import {
   pgEnum,
   pgTableCreator,
   primaryKey,
+  index,
 } from "drizzle-orm/pg-core";
 
 export const listingStatusEnum = pgEnum("listing_status", [
@@ -42,6 +43,12 @@ export const usersRelations = relations(users, ({ many }) => ({
   }),
   bids: many(bids, {
     relationName: "bidder",
+  }),
+  messages: many(messages, {
+    relationName: "sender",
+  }),
+  conversations: many(user_conversations, {
+    relationName: "participant",
   }),
 }));
 
@@ -154,13 +161,85 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   }),
 }));
 
-// return types when queried
-// export type User = typeof users.$inferSelect;
-// export type Listing = typeof listings.$inferSelect;
-// export type Bid = typeof bids.$inferSelect;
-// export type Media = typeof media.$inferSelect;
+export const conversations = createTable("conversation", {
+  conversationId: serial("conversationId").primaryKey(),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+});
 
-// export type NewUser = typeof users.$inferInsert;
-// export type NewListing = typeof listings.$inferInsert;
-// export type NewBid = typeof bids.$inferInsert;
-// export type NewMedia = typeof media.$inferInsert;
+export const conversationsRelations = relations(conversations, ({ many }) => ({
+  conversation: many(messages, {
+    relationName: "conversation",
+  }),
+  user_conversations: many(user_conversations, {
+    relationName: "conversation",
+  }),
+}));
+
+export const messages = createTable(
+  "message",
+  {
+    messageId: serial("messageId").primaryKey(),
+    conversationId: integer("conversationId")
+      .notNull()
+      .references(() => conversations.conversationId),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id),
+    content: text("content").notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+  },
+  (message) => ({
+    idx_messages_conversation_id: index("idx_messages_conversation_id").on(
+      message.conversationId
+    ),
+  })
+);
+
+export const messagesRelations = relations(messages, ({ one }) => ({
+  conversation: one(conversations, {
+    fields: [messages.conversationId],
+    references: [conversations.conversationId],
+    relationName: "conversation",
+  }),
+  sender: one(users, {
+    fields: [messages.userId],
+    references: [users.id],
+    relationName: "sender",
+  }),
+}));
+
+export const user_conversations = createTable(
+  "user_conversation",
+  {
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id),
+    conversationId: integer("conversationId")
+      .notNull()
+      .references(() => conversations.conversationId),
+  },
+  (user_conversation) => ({
+    compoundKey: primaryKey({
+      columns: [user_conversation.userId, user_conversation.conversationId],
+    }),
+    idx_user_conversations_user_id: index("idx_user_conversations_user_id").on(
+      user_conversation.userId
+    ),
+  })
+);
+
+export const user_conversationsRelations = relations(
+  user_conversations,
+  ({ one }) => ({
+    conversation: one(conversations, {
+      fields: [user_conversations.conversationId],
+      references: [conversations.conversationId],
+      relationName: "conversation",
+    }),
+    user: one(users, {
+      fields: [user_conversations.userId],
+      references: [users.id],
+      relationName: "participant",
+    }),
+  })
+);
