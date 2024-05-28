@@ -32,7 +32,7 @@ export function ListingSkeleton() {
     <>
       <section
         about="details"
-        className="flex flex-col gap-8 pb-10 pt-12 text-white md:flex-row"
+        className="flex flex-col gap-8 pb-10 pt-12 text-white md:flex-row md:items-start"
       >
         <div className="flex flex-col gap-2 md:flex-1 lg:flex-[1.5] lg:flex-row-reverse">
           <Skeleton className="aspect-square lg:flex-1" />
