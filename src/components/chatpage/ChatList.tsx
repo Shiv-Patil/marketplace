@@ -32,9 +32,9 @@ export function ChatList({
   return (
     <div className="flex h-full flex-col py-4">
       <div className="relative h-full">
-        <ScrollArea
+        <div
           ref={messagesContainerRef}
-          className="!absolute bottom-0 left-0 right-0 top-0 flex flex-col px-4"
+          className="!absolute bottom-0 left-0 right-0 top-0 flex flex-col overflow-y-auto px-2"
         >
           <AnimatePresence>
             {data.messages?.map((message, index) => (
@@ -63,7 +63,7 @@ export function ChatList({
                     : "items-start"
                 )}
               >
-                <div className="flex items-start gap-3 pb-4">
+                <div className="flex items-start gap-3 pb-4 text-sm sm:text-base">
                   {message.sender.name === data.withUser.name && (
                     <Avatar className="flex items-center justify-center">
                       <AvatarFallback className="text-xs text-muted-foreground">
@@ -97,7 +97,7 @@ export function ChatList({
               </motion.div>
             ))}
           </AnimatePresence>
-        </ScrollArea>
+        </div>
       </div>
       <ChatBottombar sendMessage={sendMessage} validateInput={validateInput} />
     </div>

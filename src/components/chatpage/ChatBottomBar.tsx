@@ -1,9 +1,8 @@
 "use client";
 
 import { SendHorizontal } from "lucide-react";
-import Link from "next/link";
 import React, { useRef, useState } from "react";
-import { buttonVariants } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { getMessagesType } from "@/server/mutations/get_messages";
@@ -101,17 +100,18 @@ export default function ChatBottombar({
           ></AutosizeTextarea>
         </motion.div>
 
-        <Link
-          href="#"
+        <Button
+          variant="ghost"
+          title="send"
+          size="icon"
           className={cn(
-            buttonVariants({ variant: "ghost", size: "icon" }),
             "h-9 w-9",
             "shrink-0 dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
           )}
           onClick={handleSend}
         >
           <SendHorizontal size={20} className="text-muted-foreground" />
-        </Link>
+        </Button>
       </AnimatePresence>
     </div>
   );

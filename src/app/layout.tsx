@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning={true} lang="en">
-      <body className={cn(inter.className, "flex min-h-screen flex-col")}>
+      <body className={cn(inter.className, "flex h-full flex-col")}>
         <ThemeProvider attribute="class" disableTransitionOnChange>
           <Providers>
             <Toaster />

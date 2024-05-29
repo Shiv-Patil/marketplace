@@ -16,7 +16,7 @@ export default async function Chat({
   }
   return (
     <>
-      <main className="flex flex-1 bg-background">
+      <main className="flex h-full bg-background">
         <MaxWidthDiv>
           <div className="relative flex-1">
             <ChatPage data={data} />

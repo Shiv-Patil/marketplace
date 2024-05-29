@@ -63,7 +63,8 @@ export default function ChatPage({ data }: { data: getMessagesType }) {
   };
 
   useEffect(() => {
-    document.body.classList.add("max-h-screen");
+    document.documentElement.classList.add("h-full");
+    document.body.classList.add("max-h-full");
     const pusher = newPusher();
     setPusher(pusher);
     const channel = pusher.subscribe(channelName);
@@ -73,7 +74,8 @@ export default function ChatPage({ data }: { data: getMessagesType }) {
         setMessages((prevState) => [...prevState, newMessage])
     );
     return () => {
-      document.body.classList.remove("max-h-screen");
+      document.body.classList.remove("max-h-full");
+      document.documentElement.classList.remove("h-full");
       pusher.disconnect();
     };
   }, []);
