@@ -16,11 +16,11 @@ export function Modal({ children }: { children: React.ReactNode }) {
       dialogRef.current?.showModal();
       document.body.classList.add("overflow-hidden");
     }
+    return () => document.body.classList.remove("overflow-hidden");
   }, []);
 
   function onDismiss() {
     router.back();
-    document.body.classList.remove("overflow-hidden");
   }
 
   return createPortal(

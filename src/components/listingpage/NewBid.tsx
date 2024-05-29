@@ -27,8 +27,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toDecimal } from "dinero.js";
 import getSchema, { schemaType } from "@/lib/input_schemas/new_bid";
 import { useMutation } from "@tanstack/react-query";
-import placeBid from "@/server/db/mutations/place_bid";
-import { toast } from "../ui/use-toast";
+import placeBid from "@/server/mutations/place_bid";
+import { toast } from "@/components/ui/use-toast";
 
 export function NewBidButton({
   listingId,
@@ -47,7 +47,7 @@ export function NewBidButton({
     },
   });
 
-  const { mutate, error, isPending } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: placeBid,
     onError: (err) => {
       toast({

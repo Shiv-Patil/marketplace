@@ -2,9 +2,9 @@
 import "server-only";
 import { getServerAuthSession } from "@/server/auth";
 import { getListing } from "@/server/queries/get_listing";
-import { db } from "..";
+import { db } from "../db";
 import { revalidatePath } from "next/cache";
-import { listings } from "../schema";
+import { listings } from "../db/schema";
 import { eq, sql } from "drizzle-orm";
 
 const prepared = db
@@ -20,13 +20,12 @@ export default async function closeListing({
   listingId: number;
 }) {
   const user = await getServerAuthSession();
-  if (!user) throw new Error("Unauthorized. Please log in again.");
+  if (!user) throw new Error("Unauthenticated. Please log in again.");
 
   const listing = await getListing(listingId);
   if (!listing) throw new Error("Listing does not exist");
 
-  if (listing.sellerId !== user.user.id)
-    throw new Error("Only the seller can close listing");
+  if (listing.sellerId !== user.user.id) throw new Error("Unauthorized");
   if (listing.status !== "active") throw new Error("Listing is already closed");
 
   const updated = await prepared.execute({ id: listingId });

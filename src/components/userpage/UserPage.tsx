@@ -10,6 +10,7 @@ import assert from "assert";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { getMessages } from "@/server/mutations/get_messages";
 
 export default function UserPage({ data }: { data: getUserType }) {
   assert(data);
@@ -33,9 +34,16 @@ export default function UserPage({ data }: { data: getUserType }) {
               {data.email}
             </span>
             {!isSelf ? (
-              <Button variant="outline" className="flex w-32 gap-2 sm:w-48">
+              <Link
+                href={`/chat/${data.id}`}
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  "flex w-32 gap-2 sm:w-48"
+                )}
+                onClick={() => getMessages({ withUserId: data.id })}
+              >
                 <MessageCircleMoreIcon /> Chat
-              </Button>
+              </Link>
             ) : null}
           </div>
         </div>

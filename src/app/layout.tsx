@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/Navbar";
 import { SessionProvider } from "next-auth/react";
 import Providers from "@/components/Providers";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning={true} lang="en">
-      <body className={inter.className}>
+      <body className={cn(inter.className, "flex min-h-screen flex-col")}>
         <ThemeProvider attribute="class" disableTransitionOnChange>
           <Providers>
             <Toaster />

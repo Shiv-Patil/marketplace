@@ -11,7 +11,7 @@ const MaxWidthDiv = ({
   return (
     <div
       className={cn(
-        "mx-auto flex h-full w-full max-w-screen-xl flex-col px-4 md:px-20",
+        "mx-auto flex w-full max-w-screen-xl flex-col px-4 md:px-20",
         className
       )}
     >

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,8 +13,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import closeListing from "@/server/db/mutations/close_listing";
-import { toast } from "../ui/use-toast";
+import closeListing from "@/server/mutations/close_listing";
+import { toast } from "@/components/ui/use-toast";
 
 export default function CloseListingButton({
   listingId,

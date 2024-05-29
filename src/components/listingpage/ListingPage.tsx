@@ -3,8 +3,8 @@
 import { type getListingType } from "@/server/queries/get_listing";
 import Image from "next/image";
 import { useState } from "react";
-import { Separator } from "../ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Table,
   TableBody,
@@ -14,14 +14,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "../ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { getFormattedAmount, getTimeLeftString } from "@/lib/utils";
-import { NewBidButton } from "./NewBid";
+import { NewBidButton } from "@/components/listingpage/NewBid";
 import { signIn, useSession } from "next-auth/react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import assert from "assert";
-import CloseListingButton from "./CloseListing";
-import { CarousalElementSkeleton } from "./Skeletons";
+import CloseListingButton from "@/components/listingpage/CloseListing";
+import { CarousalElementSkeleton } from "@/components/listingpage/Skeletons";
 import Link from "next/link";
 
 function CarousalElement({
