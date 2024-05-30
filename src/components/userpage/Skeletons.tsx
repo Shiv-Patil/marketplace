@@ -1,13 +1,21 @@
+"use client";
+
 import { MessageCircleMoreIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { listingsContainerStyle } from "@/components/Listings";
 import { ListingSkeleton } from "@/components/Listing";
 import { Skeleton } from "@/components/ui/skeleton";
 import MaxWidthDiv from "@/components/MaxWidthDiv";
+import { toast } from "@/components/ui/use-toast";
 
-export default function UserSkeleton() {
+export default function UserSkeleton({ error }: { error?: string }) {
+  useEffect(() => {
+    if (error) {
+      toast({ title: "Error", description: error, variant: "destructive" });
+    }
+  }, [error]);
   return (
     <main className="bg-background">
       <MaxWidthDiv>

@@ -10,6 +10,7 @@ import {
   users,
 } from "@/server/db/schema";
 import { intersect } from "drizzle-orm/pg-core";
+import { ratelimit } from "@/server/ratelimit";
 
 // Not a sever action as it is not exported !! DO NOT EXPORT
 async function getConversationIdQuery(user1: string, user2: string) {
@@ -45,6 +46,9 @@ export async function getMessages({ withUserId }: { withUserId: string }) {
   const user = await getServerAuthSession();
   if (!user) throw new Error("Unauthenticated. Please log in again.");
   if (user.user.id === withUserId) throw new Error("Cannot message self");
+
+  const limited = await ratelimit.mutation.limit(user.user.id);
+  if (!limited.success) throw new Error(`Ratelimited`);
 
   const withUser = await db.query.users.findFirst({
     where: eq(users.id, withUserId),

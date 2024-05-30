@@ -12,6 +12,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import MaxWidthDiv from "@/components/MaxWidthDiv";
+import { toast } from "@/components/ui/use-toast";
+import { useEffect } from "react";
 
 export function BidRowSkeleton() {
   return (
@@ -30,7 +32,12 @@ export function CarousalElementSkeleton() {
   return <Skeleton className="aspect-square h-16" />;
 }
 
-export default function ListingSkeleton() {
+export default function ListingSkeleton({ error }: { error?: string }) {
+  useEffect(() => {
+    if (error) {
+      toast({ title: "Error", description: error, variant: "destructive" });
+    }
+  }, [error]);
   return (
     <main className="bg-background">
       <MaxWidthDiv>

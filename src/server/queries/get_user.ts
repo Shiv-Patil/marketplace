@@ -1,8 +1,15 @@
 "use server";
 import "server-only";
 import { db } from "@/server/db";
+import { ratelimit } from "@/server/ratelimit";
+import getIp from "@/server/ip";
 
 export async function getUser({ userId }: { userId: string }) {
+  const limited = await ratelimit.query.limit(getIp());
+  if (!limited.success)
+    throw new Error(
+      `Try again after ${Math.ceil((limited.reset - Date.now()) / 1000)} second(s)`
+    );
   const data = await db.query.users.findFirst({
     with: {
       listings: {

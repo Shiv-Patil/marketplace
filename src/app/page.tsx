@@ -7,8 +7,15 @@ import { Suspense } from "react";
 import { getListings } from "@/server/queries/get_listings";
 
 async function ListingsWrapper() {
-  const listings = await getListings();
-  return <Listings listings={listings} />;
+  let error: string | undefined = undefined;
+  const listings = await getListings().catch((err) => {
+    error =
+      err instanceof Error && err.message.length
+        ? err.message
+        : "Unknown error";
+    return [];
+  });
+  return <Listings listings={listings} error={error} />;
 }
 
 export default function Home() {

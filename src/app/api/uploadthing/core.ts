@@ -1,6 +1,7 @@
 import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/server/db";
 import { media } from "@/server/db/schema";
+import { ratelimit } from "@/server/ratelimit";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
@@ -11,6 +12,11 @@ const middleware = async () => {
   const user = await getServerAuthSession();
   // If you throw, the user will not be able to upload
   if (!user) throw new UploadThingError("Unauthorized");
+  const limited = await ratelimit.uploadthing.limit(user.user.id);
+  if (!limited.success)
+    throw new UploadThingError(
+      `Please wait ${Math.ceil((limited.reset - Date.now()) / 1000)} seconds before uploading`
+    );
   // Whatever is returned here is accessible in onUploadComplete as `metadata`
   return { userId: user.user.id };
 };

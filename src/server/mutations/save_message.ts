@@ -5,6 +5,7 @@ import { getServerAuthSession } from "@/server/auth";
 import { and, eq } from "drizzle-orm";
 import { messages, user_conversations } from "@/server/db/schema";
 import getSchema, { schemaType } from "@/lib/input_schemas/new_message";
+import { ratelimit } from "@/server/ratelimit";
 
 export async function saveMessage(data: schemaType) {
   const formSchema = getSchema();
@@ -13,6 +14,9 @@ export async function saveMessage(data: schemaType) {
 
   const user = await getServerAuthSession();
   if (!user) throw new Error("Unauthenticated. Please log in again.");
+
+  const limited = await ratelimit.message.limit(user.user.id);
+  if (!limited.success) throw new Error(`You are sending messages too fast`);
 
   const conversation = await db.query.user_conversations.findFirst({
     where: and(

@@ -8,8 +8,15 @@ export default async function Listing({
 }: {
   params: { id: string };
 }) {
-  const data = await getListing(+listingId);
-  if (!data) return <ListingSkeleton />;
+  let error: string | undefined = undefined;
+  const data = await getListing(+listingId).catch((err) => {
+    error =
+      err instanceof Error && err.message.length
+        ? err.message
+        : "Unknown error";
+    return undefined;
+  });
+  if (!data) return <ListingSkeleton error={error} />;
   return (
     <>
       <main className="bg-background">

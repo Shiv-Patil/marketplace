@@ -6,6 +6,7 @@ import { db } from "@/server/db";
 import { revalidatePath } from "next/cache";
 import { listings } from "@/server/db/schema";
 import { eq, sql } from "drizzle-orm";
+import { ratelimit } from "@/server/ratelimit";
 
 const prepared = db
   .update(listings)
@@ -21,6 +22,9 @@ export default async function closeListing({
 }) {
   const user = await getServerAuthSession();
   if (!user) throw new Error("Unauthenticated. Please log in again.");
+
+  const limited = await ratelimit.mutation.limit(user.user.id);
+  if (!limited.success) throw new Error(`Ratelimited`);
 
   const listing = await getListing(listingId);
   if (!listing) throw new Error("Listing does not exist");

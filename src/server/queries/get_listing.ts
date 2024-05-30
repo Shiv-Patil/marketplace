@@ -3,9 +3,16 @@ import "server-only";
 import { db } from "@/server/db";
 import { eq } from "drizzle-orm";
 import { listings } from "@/server/db/schema";
+import { ratelimit } from "@/server/ratelimit";
+import getIp from "@/server/ip";
 
 export async function getListing(id: number) {
   if (isNaN(id)) return undefined;
+  const limited = await ratelimit.query.limit(getIp());
+  if (!limited.success)
+    throw new Error(
+      `Try again after ${Math.ceil((limited.reset - Date.now()) / 1000)} second(s)`
+    );
   const data = await db.query.listings.findFirst({
     with: {
       seller: true,

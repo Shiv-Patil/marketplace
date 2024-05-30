@@ -5,10 +5,14 @@ import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/server/db";
 import { listings, media } from "@/server/db/schema";
 import { and, inArray, isNull } from "drizzle-orm";
+import { ratelimit } from "@/server/ratelimit";
 
 export default async function createNewListing(data: schemaType) {
   const user = await getServerAuthSession();
   if (!user) throw new Error("Unauthenticated. Please log in again.");
+
+  const limited = await ratelimit.mutation.limit(user.user.id);
+  if (!limited.success) throw new Error(`Ratelimited`);
 
   const formSchema = getSchema();
   const res = formSchema.safeParse(data);
@@ -37,6 +41,12 @@ export default async function createNewListing(data: schemaType) {
       .where(and(inArray(media.mediaId, data.media), isNull(media.listingId)));
     return inserted[0].listingId;
   });
+
+  const createLimited = await ratelimit.createListing.limit(user.user.id);
+  if (!createLimited.success)
+    throw new Error(
+      `Please wait ${Math.ceil((createLimited.reset - Date.now()) / 1000)} seconds before listing another item`
+    );
 
   console.log("New listing:", listingId);
   return listingId;

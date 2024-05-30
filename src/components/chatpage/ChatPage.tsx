@@ -52,7 +52,7 @@ export default function ChatPage({ data }: { data: getMessagesType }) {
       conversationId: data.conversationId,
     }).catch((reason: any) => {
       toast({
-        title: "Error: Could not save message in database",
+        title: "Error: Could not send message",
         description:
           reason instanceof Error
             ? reason.message

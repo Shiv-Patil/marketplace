@@ -6,10 +6,14 @@ import { getListing } from "@/server/queries/get_listing";
 import { db } from "@/server/db";
 import { bids } from "@/server/db/schema";
 import { revalidatePath } from "next/cache";
+import { ratelimit } from "@/server/ratelimit";
 
 export default async function placeBid(data: schemaType) {
   const user = await getServerAuthSession();
   if (!user) throw new Error("Unauthenticated. Please log in again.");
+
+  const limited = await ratelimit.mutation.limit(user.user.id);
+  if (!limited.success) throw new Error(`Ratelimited`);
 
   const listing = await getListing(data.listingId);
   if (!listing) throw new Error("Listing does not exist");
@@ -31,6 +35,12 @@ export default async function placeBid(data: schemaType) {
       })
       .returning();
   });
+
+  const bidLimited = await ratelimit.bid.limit(user.user.id);
+  if (!bidLimited.success)
+    throw new Error(
+      `Please wait ${Math.ceil((bidLimited.reset - Date.now()) / 1000)} seconds before placing another bid`
+    );
 
   console.log("New bid:", inserted.length ? inserted[0] : inserted);
   revalidatePath(`/listing/${listing.listingId}`);

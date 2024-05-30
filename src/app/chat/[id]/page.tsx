@@ -12,6 +12,10 @@ export default async function Chat({
   try {
     data = await getMessages({ withUserId });
   } catch (err) {
+    console.error(
+      "Error message:",
+      err instanceof Error ? err.message : "Unspecified"
+    );
     return redirect("/");
   }
   return (

@@ -8,8 +8,15 @@ export default async function User({
 }: {
   params: { id: string };
 }) {
-  const data = await getUser({ userId });
-  if (!data) return <UserSkeleton />;
+  let error: string | undefined = undefined;
+  const data = await getUser({ userId }).catch((err) => {
+    error =
+      err instanceof Error && err.message.length
+        ? err.message
+        : "Unknown error";
+    return undefined;
+  });
+  if (!data) return <UserSkeleton error={error} />;
   return (
     <>
       <main className="bg-background">
