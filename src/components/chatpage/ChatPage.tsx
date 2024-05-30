@@ -63,6 +63,7 @@ export default function ChatPage({ data }: { data: getMessagesType }) {
   };
 
   useEffect(() => {
+    console.log("PUSHER INIT");
     const pusher = newPusher();
     setPusher(pusher);
     const channel = pusher.subscribe(channelName);
@@ -74,7 +75,7 @@ export default function ChatPage({ data }: { data: getMessagesType }) {
     return () => {
       pusher.disconnect();
     };
-  }, []);
+  }, [channelName]);
 
   return (
     <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col">

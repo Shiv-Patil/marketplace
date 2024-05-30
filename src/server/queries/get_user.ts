@@ -5,8 +5,9 @@ import { ratelimit } from "@/server/ratelimit";
 import getIp from "@/server/ip";
 
 export async function getUser({ userId }: { userId: string }) {
-  const limited = await ratelimit.query.limit(getIp());
-  if (!limited.success)
+  const ip = getIp();
+  const limited = await ratelimit.query.limit(ip);
+  if (!limited.success && ip.length)
     throw new Error(
       `Try again after ${Math.ceil((limited.reset - Date.now()) / 1000)} second(s)`
     );

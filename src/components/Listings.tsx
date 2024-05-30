@@ -21,7 +21,7 @@ export default function Listings({
     if (error) {
       toast({ title: "Error", description: error, variant: "destructive" });
     }
-  }, [listings]);
+  }, [error]);
   return listings.length || error ? (
     <div className={listingsContainerStyle}>
       {error ? (

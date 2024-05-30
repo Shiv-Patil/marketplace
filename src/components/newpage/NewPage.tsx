@@ -61,14 +61,17 @@ function ImageUpload({
     ? Object.keys(permittedFileInfo?.config)
     : [];
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    if (acceptedFiles[0].size > 524288)
-      return toast({
-        title: "Alert",
-        description: "Max file upload size is 500KB.",
-      });
-    startUpload(acceptedFiles);
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      if (acceptedFiles[0].size > 524288)
+        return toast({
+          title: "Alert",
+          description: "Max file upload size is 500KB.",
+        });
+      startUpload(acceptedFiles);
+    },
+    [startUpload]
+  );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     maxFiles: 1,
@@ -154,16 +157,19 @@ export default function NewPage({ userId }: { userId: string }) {
     mutate(data);
   }
 
-  const getSetter = useCallback((index: number) => {
-    return (mediaId: number | undefined) => {
-      setMedia((prev) => {
-        prev[index] = mediaId;
-        const formMedia: any[] = prev.filter((ele) => ele);
-        form.setValue("media", formMedia, { shouldValidate: true });
-        return prev;
-      });
-    };
-  }, []);
+  const getSetter = useCallback(
+    (index: number) => {
+      return (mediaId: number | undefined) => {
+        setMedia((prev) => {
+          prev[index] = mediaId;
+          const formMedia: any[] = prev.filter((ele) => ele);
+          form.setValue("media", formMedia, { shouldValidate: true });
+          return prev;
+        });
+      };
+    },
+    [form]
+  );
 
   const mediaErrs = form.formState.errors.media;
 

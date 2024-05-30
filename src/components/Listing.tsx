@@ -59,8 +59,10 @@ const Listing = ({ data }: { data: getListingsType[0] }) => {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          {timeleft <= 0 || data.status === "expired" ? (
-            <p className="text-muted-foreground">Ended</p>
+          {timeleft <= 0 || data.status !== "active" ? (
+            <p className="text-muted-foreground">
+              {data.status === "sold" ? "Sold" : "Ended"}
+            </p>
           ) : (
             <p>
               {days

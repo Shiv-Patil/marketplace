@@ -7,7 +7,7 @@ import { ratelimit } from "@/server/ratelimit";
 export async function getListings() {
   const ip = getIp();
   const limited = await ratelimit.query.limit(ip);
-  if (!limited.success)
+  if (!limited.success && ip.length)
     throw new Error(
       `Try again after ${Math.ceil((limited.reset - Date.now()) / 1000)} second(s)`
     );

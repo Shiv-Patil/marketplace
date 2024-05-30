@@ -23,6 +23,8 @@ import assert from "assert";
 import CloseListingButton from "@/components/listingpage/CloseListing";
 import { CarousalElementSkeleton } from "@/components/listingpage/Skeletons";
 import Link from "next/link";
+import { GenerateOTP } from "./GenerateOTP";
+import { VerifyPurchase } from "./InputOTP";
 
 function CarousalElement({
   id,
@@ -169,22 +171,58 @@ export default function ListingPage({ data }: { data: getListingType }) {
             </span>
             <Badge variant="outline">{data.status}</Badge>
           </div>
-          <h4 className="text-ellipsis">{data.longDescription}</h4>
-          <div className="h-4" />
-          <div className="flex flex-col text-foreground">
-            <span className="text-2xl">
-              {getFormattedAmount(data.currentPrice)}
-            </span>
-            <span className="text-sm text-muted-foreground">current price</span>
-            <span className="py-2 text-sm text-muted-foreground">
-              {getTimeLeftString(data.endDate, data.status === "expired")}
-            </span>
-          </div>
-          {data.status === "expired" ? null : authData?.user.id ===
-            data.sellerId ? (
-            <CloseListingButton listingId={data.listingId} />
+          <h4 className="text-ellipsis">
+            {(data.longDescription || "").length ? (
+              data.longDescription
+            ) : (
+              <span className="text-sm text-muted-foreground">
+                Not provided
+              </span>
+            )}
+          </h4>
+          <div className="h-1" />
+          {data.status !== "sold" ? (
+            <>
+              <div className="flex flex-col text-foreground">
+                <span className="text-2xl">
+                  {getFormattedAmount(data.currentPrice)}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  current price
+                </span>
+                <span className="py-2 text-sm text-muted-foreground">
+                  {getTimeLeftString(data.endDate, data.status === "expired")}
+                </span>
+              </div>
+              {data.status === "expired" ? (
+                data.bids.length && authData?.user.id === data.sellerId ? (
+                  <GenerateOTP listingId={data.listingId} />
+                ) : data.bids.length &&
+                  authData?.user.id === data.bids[0].bidderId ? (
+                  <VerifyPurchase listingId={data.listingId} />
+                ) : null
+              ) : authData?.user.id === data.sellerId ? (
+                <CloseListingButton listingId={data.listingId} />
+              ) : (
+                NewBidButtonWithAuth
+              )}
+            </>
           ) : (
-            NewBidButtonWithAuth
+            <>
+              <span className="text-sm text-muted-foreground">Sold to</span>
+              <Link
+                className="flex items-center gap-2"
+                href={`/user/${data.bids[0].bidderId}`}
+              >
+                <Avatar>
+                  <AvatarImage src={data.bids[0].bidder.image || undefined} />
+                  <AvatarFallback className="flex h-full w-full items-center justify-center bg-secondary">
+                    S
+                  </AvatarFallback>
+                </Avatar>
+                {data.bids[0].bidder.name}
+              </Link>
+            </>
           )}
         </div>
       </section>

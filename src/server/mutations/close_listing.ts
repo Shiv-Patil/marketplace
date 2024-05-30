@@ -26,7 +26,9 @@ export default async function closeListing({
   const limited = await ratelimit.mutation.limit(user.user.id);
   if (!limited.success) throw new Error(`Ratelimited`);
 
-  const listing = await getListing(listingId);
+  const listing = await db.query.listings.findFirst({
+    where: eq(listings.listingId, listingId),
+  });
   if (!listing) throw new Error("Listing does not exist");
 
   if (listing.sellerId !== user.user.id) throw new Error("Unauthorized");

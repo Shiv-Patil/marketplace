@@ -10,6 +10,7 @@ interface UseAutosizeTextAreaProps {
   triggerAutoSize: string;
 }
 
+/* eslint-disable react-hooks/exhaustive-deps */
 export const useAutosizeTextArea = ({
   textAreaRef,
   triggerAutoSize,

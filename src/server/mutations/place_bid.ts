@@ -25,6 +25,12 @@ export default async function placeBid(data: schemaType) {
   const res = formSchema.safeParse(data);
   if (!res.success) throw new Error(res.error.errors[0].message);
 
+  const bidLimited = await ratelimit.bid.limit(user.user.id);
+  if (!bidLimited.success)
+    throw new Error(
+      `Please wait ${Math.ceil((bidLimited.reset - Date.now()) / 1000)} seconds before placing another bid`
+    );
+
   const inserted = await db.transaction(async (tx) => {
     return await tx
       .insert(bids)
@@ -35,12 +41,6 @@ export default async function placeBid(data: schemaType) {
       })
       .returning();
   });
-
-  const bidLimited = await ratelimit.bid.limit(user.user.id);
-  if (!bidLimited.success)
-    throw new Error(
-      `Please wait ${Math.ceil((bidLimited.reset - Date.now()) / 1000)} seconds before placing another bid`
-    );
 
   console.log("New bid:", inserted.length ? inserted[0] : inserted);
   revalidatePath(`/listing/${listing.listingId}`);
