@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AnimatePresence, motion } from "framer-motion";
 import { getMessagesType } from "@/server/mutations/get_messages";
 import ChatBottombar from "@/components/chatpage/ChatBottomBar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function ChatList({
   data,
@@ -22,7 +21,7 @@ export function ChatList({
     if (
       scrollEle &&
       scrollEle.scrollHeight - scrollEle.clientHeight - scrollEle.scrollTop <
-        300
+        500
     ) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;

@@ -11,7 +11,7 @@ import {
   AutosizeTextAreaRef,
   AutosizeTextarea,
 } from "@/components/ui/autosize-textarea";
-import { toast } from "../ui/use-toast";
+import { toast } from "@/components/ui/use-toast";
 
 export default function ChatBottombar({
   sendMessage,
