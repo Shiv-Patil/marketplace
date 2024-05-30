@@ -46,7 +46,7 @@ export default function ChatPage({ data }: { data: getMessagesType }) {
       });
 
     setMessages([...messagesState, newMessage]);
-    pusher.channel(channelName).trigger("client-new-message", newMessage);
+    // pusher.channel(channelName).trigger("client-new-message", newMessage);
     mutateAsync({
       content: newMessage.content,
       conversationId: data.conversationId,
@@ -63,14 +63,15 @@ export default function ChatPage({ data }: { data: getMessagesType }) {
   };
 
   useEffect(() => {
-    console.log("PUSHER INIT");
     const pusher = newPusher();
     setPusher(pusher);
     const channel = pusher.subscribe(channelName);
     channel.bind(
       "client-new-message",
-      (newMessage: getMessagesType["messages"][number]) =>
-        setMessages((prevState) => [...prevState, newMessage])
+      (newMessage: getMessagesType["messages"][number]) => {
+        if (newMessage.sender.id === data.withUser.id)
+          setMessages((prevState) => [...prevState, newMessage]);
+      }
     );
     return () => {
       pusher.disconnect();

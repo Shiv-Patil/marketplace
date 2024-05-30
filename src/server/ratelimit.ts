@@ -1,3 +1,4 @@
+import "server-only";
 import { Ratelimit } from "@upstash/ratelimit";
 import { redis } from "@/server/redis";
 
@@ -10,7 +11,7 @@ export const ratelimit = {
   }),
   mutation: new Ratelimit({
     redis: redis,
-    limiter: Ratelimit.slidingWindow(3, "10 s"),
+    limiter: Ratelimit.slidingWindow(4, "10 s"),
     analytics: true,
     prefix: "@upstash/ratelimit",
   }),

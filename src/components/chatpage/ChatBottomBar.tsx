@@ -44,6 +44,7 @@ export default function ChatBottombar({
       content: validated,
       createdAt: new Date(),
       sender: {
+        id: authData.user.id,
         name: authData.user.name || "Name",
         image: authData.user.image || null,
       },

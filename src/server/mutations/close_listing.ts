@@ -1,7 +1,6 @@
 "use server";
 import "server-only";
 import { getServerAuthSession } from "@/server/auth";
-import { getListing } from "@/server/queries/get_listing";
 import { db } from "@/server/db";
 import { revalidatePath } from "next/cache";
 import { listings } from "@/server/db/schema";
@@ -36,6 +35,5 @@ export default async function closeListing({
 
   const updated = await prepared.execute({ id: listingId });
 
-  console.log("Closed listing:", updated);
   revalidatePath(`/listing/${listingId}`);
 }

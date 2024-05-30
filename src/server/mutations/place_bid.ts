@@ -31,17 +31,13 @@ export default async function placeBid(data: schemaType) {
       `Please wait ${Math.ceil((bidLimited.reset - Date.now()) / 1000)} seconds before placing another bid`
     );
 
-  const inserted = await db.transaction(async (tx) => {
-    return await tx
-      .insert(bids)
-      .values({
-        listingId: data.listingId,
-        bidderId: user.user.id,
-        amount: res.data.bid,
-      })
-      .returning();
+  await db.transaction(async (tx) => {
+    await tx.insert(bids).values({
+      listingId: data.listingId,
+      bidderId: user.user.id,
+      amount: res.data.bid,
+    });
   });
 
-  console.log("New bid:", inserted.length ? inserted[0] : inserted);
   revalidatePath(`/listing/${listing.listingId}`);
 }

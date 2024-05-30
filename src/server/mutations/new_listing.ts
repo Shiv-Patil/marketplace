@@ -48,6 +48,5 @@ export default async function createNewListing(data: schemaType) {
     return inserted[0].listingId;
   });
 
-  console.log("New listing:", listingId);
   return listingId;
 }

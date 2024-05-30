@@ -6,6 +6,8 @@ import { and, eq } from "drizzle-orm";
 import { messages, user_conversations } from "@/server/db/schema";
 import getSchema, { schemaType } from "@/lib/input_schemas/new_message";
 import { ratelimit } from "@/server/ratelimit";
+import { pusher } from "@/server//pusher";
+import { getMessagesType } from "@/server/mutations/get_messages";
 
 export async function saveMessage(data: schemaType) {
   const formSchema = getSchema();
@@ -25,6 +27,21 @@ export async function saveMessage(data: schemaType) {
     ),
   });
   if (!conversation) throw new Error("Invalid conversation");
+
+  const newMessage: getMessagesType["messages"][number] = {
+    content: data.content,
+    sender: {
+      id: user.user.id,
+      name: user.user.name || "Name",
+      image: user.user.image || null,
+    },
+    createdAt: new Date(),
+  };
+  pusher.trigger(
+    `private-messages_${data.conversationId}`,
+    "client-new-message",
+    newMessage
+  );
 
   const saved = await db
     .insert(messages)

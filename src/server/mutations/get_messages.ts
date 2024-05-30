@@ -33,6 +33,7 @@ export async function getMessages({ withUserId }: { withUserId: string }) {
     with: {
       sender: {
         columns: {
+          id: true,
           name: true,
           image: true,
         },
