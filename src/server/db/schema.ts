@@ -35,11 +35,14 @@ export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts, {
     relationName: "user",
   }),
-  media: many(sessions, {
+  sessions: many(sessions, {
     relationName: "user",
   }),
   listings: many(listings, {
     relationName: "seller",
+  }),
+  media: many(media, {
+    relationName: "uploader",
   }),
   bids: many(bids, {
     relationName: "bidder",
@@ -100,8 +103,9 @@ export const bidsRelations = relations(bids, ({ one }) => ({
 }));
 
 export const media = createTable("media", {
-  mediaId: serial("meida_id").primaryKey(),
-  listingId: integer("listing_id").notNull(),
+  mediaId: serial("media_id").primaryKey(),
+  userId: text("user_id").notNull(),
+  listingId: integer("listing_id"),
   url: text("url").notNull(),
 });
 
@@ -110,6 +114,11 @@ export const mediaRelations = relations(media, ({ one }) => ({
     fields: [media.listingId],
     references: [listings.listingId],
     relationName: "listing",
+  }),
+  uploader: one(users, {
+    fields: [media.userId],
+    references: [users.id],
+    relationName: "uploader",
   }),
 }));
 

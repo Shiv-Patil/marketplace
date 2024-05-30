@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import MaxWidthDiv from "@/components/MaxWidthDiv";
 import { X } from "lucide-react";
+import { Toaster } from "@/components/ui/toaster";
 
 export function Modal({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -24,14 +25,18 @@ export function Modal({ children }: { children: React.ReactNode }) {
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex bg-black/80 animate-in fade-in-0">
+    <div className="absolute inset-0 z-30 flex bg-black/80 animate-in fade-in-0">
       <dialog
         ref={dialogRef}
-        className="m-0 flex h-screen w-screen bg-transparent"
+        className="z-30 m-0 flex h-screen w-screen bg-transparent"
         onClose={onDismiss}
       >
-        <MaxWidthDiv className="items-center justify-center py-4">
-          <div className="relative flex h-full w-full flex-col bg-background p-4 md:h-4/5 md:w-4/5">
+        <Toaster />
+        <MaxWidthDiv className="items-center justify-center py-4 md:p-8">
+          <div
+            id="app-modal"
+            className="relative flex h-full w-full flex-col overflow-y-auto overflow-x-hidden rounded-lg bg-background p-4 lg:h-5/6 lg:w-5/6"
+          >
             <Button
               onClick={() => dialogRef.current?.close()}
               variant="ghost"

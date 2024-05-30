@@ -1,5 +1,8 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
+if (process.env.NODE_ENV === "production") {
+  console.log = function () {};
+}
 
 export const env = createEnv({
   /**

@@ -2,7 +2,7 @@
 import "server-only";
 import { db } from "@/server/db";
 import { eq } from "drizzle-orm";
-import { listings } from "../db/schema";
+import { listings } from "@/server/db/schema";
 
 export async function getListing(id: number) {
   if (isNaN(id)) return undefined;

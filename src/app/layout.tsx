@@ -6,6 +6,9 @@ import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/Navbar";
 import Providers from "@/components/Providers";
 import { cn } from "@/lib/utils";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { uploadthingRouter } from "@/app/api/uploadthing/core";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +27,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning={true} lang="en">
       <body className={cn(inter.className, "flex h-full flex-col")}>
+        <NextSSRPlugin routerConfig={extractRouterConfig(uploadthingRouter)} />
         <ThemeProvider attribute="class" disableTransitionOnChange>
           <Providers>
             <Toaster />

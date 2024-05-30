@@ -22,7 +22,6 @@ import {
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toDecimal } from "dinero.js";
 import getSchema, { schemaType } from "@/lib/input_schemas/new_bid";
@@ -65,7 +64,7 @@ export function NewBidButton({
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  function onSubmit(data: schemaType) {
     mutate(data);
   }
 

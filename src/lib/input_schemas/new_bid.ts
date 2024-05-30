@@ -2,9 +2,9 @@ import { getIncrement, parseToDinero } from "@/lib/utils";
 import { INR } from "@dinero.js/currencies";
 import { add, dinero, equal, lessThan, toDecimal } from "dinero.js";
 import { z } from "zod";
+const zeroDinero = dinero({ amount: 0, currency: INR });
 
 export default function getSchema(currentPrice: string) {
-  const zeroDinero = dinero({ amount: 0, currency: INR });
   const currentPriceDinero = parseToDinero(currentPrice) || zeroDinero;
   const incrementINR = getIncrement(Number(toDecimal(currentPriceDinero)));
   const incrementDinero = dinero({ amount: incrementINR * 100, currency: INR });

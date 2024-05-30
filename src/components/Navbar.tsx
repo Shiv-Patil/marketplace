@@ -3,8 +3,8 @@
 import Link from "next/link";
 import MaxWidthDiv from "@/components/MaxWidthDiv";
 import Image from "next/image";
-import NavAuthButtons from "./NavAuthButtons";
-import ThemeToggle from "./ui/theme-toggle";
+import NavAuthButtons from "@/components/NavAuthButtons";
+import ThemeToggle from "@/components/ui/theme-toggle";
 
 const Navbar = () => {
   return (

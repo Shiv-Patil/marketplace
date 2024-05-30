@@ -27,7 +27,7 @@ export function getTimeLeftString(endDate: Date, expired?: boolean) {
 }
 
 export function getIncrement(val: number): number {
-  if (val > 20 && val < 60) return 2;
+  if (val >= 20 && val < 60) return 2;
   else if (val >= 60 && val < 200) return 5;
   else if (val >= 200 && val < 500) return 10;
   else if (val >= 500 && val < 1000) return 25;
@@ -46,7 +46,7 @@ export function getIncrement(val: number): number {
 
 export function parseToDinero(val: string, currency?: Currency<number>) {
   if (!currency) currency = INR;
-  if (typeof val !== "string") val = `${val}`;
+  val = typeof val !== "string" ? `${val}` : val.trim();
   let scale = 0;
   let _decimalIndex = val.indexOf(".");
   if (_decimalIndex !== -1) {
@@ -54,7 +54,7 @@ export function parseToDinero(val: string, currency?: Currency<number>) {
     scale = val.length - _decimalIndex;
   }
   const amount = +val;
-  if (isNaN(amount) || amount > 1000000) return null;
+  if (isNaN(amount) || amount > 1000000 || amount < 20) return null;
   try {
     return dinero({ amount, currency, scale });
   } catch {

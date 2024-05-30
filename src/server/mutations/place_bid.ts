@@ -3,8 +3,8 @@ import "server-only";
 import getSchema, { schemaType } from "@/lib/input_schemas/new_bid";
 import { getServerAuthSession } from "@/server/auth";
 import { getListing } from "@/server/queries/get_listing";
-import { db } from "../db";
-import { bids } from "../db/schema";
+import { db } from "@/server/db";
+import { bids } from "@/server/db/schema";
 import { revalidatePath } from "next/cache";
 
 export default async function placeBid(data: schemaType) {

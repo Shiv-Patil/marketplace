@@ -1,15 +1,15 @@
+"use client";
+
 import NewPage from "@/components/newpage/NewPage";
-import { Suspense } from "react";
+import { useSession } from "next-auth/react";
+import { Spinner } from "@/components/ui/spinner";
+import { redirect } from "next/navigation";
 
-async function NewPageWrapper() {
-  // fetch data here
-  return <NewPage />;
-}
-
-export default function NewPageWrapperSuspense() {
-  return (
-    <Suspense fallback={"loading"}>
-      <NewPageWrapper />
-    </Suspense>
-  );
+export default function NewPageWrapper() {
+  const { status, data } = useSession();
+  if (status === "loading") return <Spinner className="self-center" />;
+  if (status === "unauthenticated" || !data) {
+    redirect("/");
+  }
+  return <NewPage userId={data.user.id} />;
 }

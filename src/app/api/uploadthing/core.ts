@@ -1,4 +1,6 @@
 import { getServerAuthSession } from "@/server/auth";
+import { db } from "@/server/db";
+import { media } from "@/server/db/schema";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
@@ -14,21 +16,29 @@ const middleware = async () => {
 };
 
 // FileRouter for your app, can contain multiple FileRoutes
-export const ourFileRouter = {
+export const uploadthingRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
   mediaUploader: f({
-    image: { maxFileSize: "1MB", maxFileCount: 3 },
-    video: { maxFileSize: "4MB", maxFileCount: 1, minFileCount: 0 },
+    image: { maxFileSize: "512KB", maxFileCount: 1 },
   })
     // Set permissions and file types for this FileRoute
     .middleware(middleware)
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
-      console.log("Upload complete for userId:", metadata.userId);
-      console.log("file url", file.url);
+      if (process.env.NODE_ENV !== "production") {
+        console.log("Upload complete for userId:", metadata.userId);
+        console.log("file url", file.url);
+      }
+      const inserted = await db
+        .insert(media)
+        .values({ url: file.url, userId: metadata.userId })
+        .returning();
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: metadata.userId };
+      return {
+        uploadedBy: metadata.userId,
+        mediaId: inserted.length ? inserted[0].mediaId : undefined,
+      };
     }),
 } satisfies FileRouter;
 
-export type OurFileRouter = typeof ourFileRouter;
+export type UploadthingRouter = typeof uploadthingRouter;

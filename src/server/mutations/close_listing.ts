@@ -2,9 +2,9 @@
 import "server-only";
 import { getServerAuthSession } from "@/server/auth";
 import { getListing } from "@/server/queries/get_listing";
-import { db } from "../db";
+import { db } from "@/server/db";
 import { revalidatePath } from "next/cache";
-import { listings } from "../db/schema";
+import { listings } from "@/server/db/schema";
 import { eq, sql } from "drizzle-orm";
 
 const prepared = db
