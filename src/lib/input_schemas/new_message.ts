@@ -14,6 +14,7 @@ export default function getSchema() {
           "Message content cannot exceed maximum length of 1000 characters."
         ),
       conversationId: z.number(),
+      socketId: z.string().min(0),
     })
     .required({ content: true, conversationId: true });
   return formSchema;

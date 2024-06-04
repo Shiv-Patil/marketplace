@@ -1,6 +1,7 @@
 import "server-only";
 import { Ratelimit } from "@upstash/ratelimit";
 import { redis } from "@/server/redis";
+import getIp, { FALLBACK_IP_ADDRESS } from "@/server/ip";
 
 export const ratelimit = {
   query: new Ratelimit({
@@ -39,3 +40,14 @@ export const ratelimit = {
     prefix: "@upstash/ratelimit",
   }),
 };
+
+export async function ratelimitWithIp() {
+  const ip = getIp();
+  if (ip !== FALLBACK_IP_ADDRESS) {
+    const limited = await ratelimit.query.limit(ip);
+    if (!limited.success)
+      throw new Error(
+        `Try again after ${Math.ceil((limited.reset - Date.now()) / 1000)} second(s)`
+      );
+  }
+}

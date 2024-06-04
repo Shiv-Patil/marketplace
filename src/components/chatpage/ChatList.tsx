@@ -4,15 +4,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AnimatePresence, motion } from "framer-motion";
 import { getMessagesType } from "@/server/mutations/get_messages";
 import ChatBottombar from "@/components/chatpage/ChatBottomBar";
+import type { NewMessage } from "@/components/chatpage/ChatBottomBar";
 
 export function ChatList({
   data,
   sendMessage,
   validateInput,
+  socketId,
 }: {
   data: getMessagesType;
-  sendMessage: (newMessage: getMessagesType["messages"][number]) => void;
+  sendMessage: (newMessage: NewMessage) => void;
   validateInput: (content: string) => string | undefined;
+  socketId: string;
 }) {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
@@ -98,7 +101,11 @@ export function ChatList({
           </AnimatePresence>
         </div>
       </div>
-      <ChatBottombar sendMessage={sendMessage} validateInput={validateInput} />
+      <ChatBottombar
+        sendMessage={sendMessage}
+        validateInput={validateInput}
+        socketId={socketId}
+      />
     </div>
   );
 }

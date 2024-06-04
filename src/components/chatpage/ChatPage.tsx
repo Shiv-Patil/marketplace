@@ -10,6 +10,7 @@ import { toast } from "@/components/ui/use-toast";
 import getSchema, { schemaType } from "@/lib/input_schemas/new_message";
 import newPusher from "@/lib/pusher_client";
 import Pusher from "pusher-js";
+import { NewMessage } from "@/components/chatpage/ChatBottomBar";
 
 export default function ChatPage({ data }: { data: getMessagesType }) {
   const [messagesState, setMessages] = useState<getMessagesType["messages"]>(
@@ -25,6 +26,7 @@ export default function ChatPage({ data }: { data: getMessagesType }) {
   const validateInput = (content: string) => {
     const formSchema = getSchema();
     const toSubmit: schemaType = {
+      socketId: pusher?.connection.socket_id || "",
       content,
       conversationId: data.conversationId,
     };
@@ -37,19 +39,28 @@ export default function ChatPage({ data }: { data: getMessagesType }) {
     });
   };
 
-  const sendMessage = (newMessage: getMessagesType["messages"][number]) => {
+  const sendMessage = (newMessage: NewMessage) => {
     if (!pusher)
       return toast({
         title: "Error",
         description: "An unexpected error occurred",
         variant: "destructive",
       });
-
-    setMessages([...messagesState, newMessage]);
-    // pusher.channel(channelName).trigger("client-new-message", newMessage);
+    setMessages([
+      ...messagesState,
+      {
+        content: newMessage.content,
+        createdAt: newMessage.createdAt,
+        sender: {
+          image: newMessage.senderImage,
+          name: newMessage.senderName,
+        },
+      },
+    ]);
     mutateAsync({
       content: newMessage.content,
       conversationId: data.conversationId,
+      socketId: pusher.connection.socket_id,
     }).catch((reason: any) => {
       toast({
         title: "Error: Could not send message",
@@ -66,13 +77,20 @@ export default function ChatPage({ data }: { data: getMessagesType }) {
     const pusher = newPusher();
     setPusher(pusher);
     const channel = pusher.subscribe(channelName);
-    channel.bind(
-      "client-new-message",
-      (newMessage: getMessagesType["messages"][number]) => {
-        if (newMessage.sender.id === data.withUser.id)
-          setMessages((prevState) => [...prevState, newMessage]);
-      }
-    );
+    channel.bind("client-new-message", (newMessage: NewMessage) => {
+      if (newMessage.socketId !== pusher.connection.socket_id)
+        setMessages((prevState) => [
+          ...prevState,
+          {
+            content: newMessage.content,
+            createdAt: newMessage.createdAt,
+            sender: {
+              image: newMessage.senderImage,
+              name: newMessage.senderName,
+            },
+          },
+        ]);
+    });
     return () => {
       pusher.disconnect();
     };
@@ -86,6 +104,7 @@ export default function ChatPage({ data }: { data: getMessagesType }) {
         data={{ ...data, messages: messagesState }}
         sendMessage={sendMessage}
         validateInput={validateInput}
+        socketId={pusher?.connection.socket_id || ""}
       />
     </div>
   );

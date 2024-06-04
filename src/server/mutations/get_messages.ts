@@ -1,4 +1,3 @@
-"use server";
 import "server-only";
 import { db } from "@/server/db";
 import { getServerAuthSession } from "@/server/auth";
@@ -33,7 +32,6 @@ export async function getMessages({ withUserId }: { withUserId: string }) {
     with: {
       sender: {
         columns: {
-          id: true,
           name: true,
           image: true,
         },

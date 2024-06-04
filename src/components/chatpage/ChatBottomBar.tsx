@@ -5,7 +5,6 @@ import React, { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { getMessagesType } from "@/server/mutations/get_messages";
 import { useSession } from "next-auth/react";
 import {
   AutosizeTextAreaRef,
@@ -13,12 +12,22 @@ import {
 } from "@/components/ui/autosize-textarea";
 import { toast } from "@/components/ui/use-toast";
 
+export type NewMessage = {
+  content: string;
+  createdAt: Date;
+  senderImage: string;
+  senderName: string;
+  socketId: string;
+};
+
 export default function ChatBottombar({
   sendMessage,
   validateInput,
+  socketId,
 }: {
-  sendMessage: (newMessage: getMessagesType["messages"][number]) => void;
+  sendMessage: (newMessage: NewMessage) => void;
   validateInput: (content: string) => string | undefined;
+  socketId: string;
 }) {
   const [message, setMessage] = useState("");
   const inputRef = useRef<AutosizeTextAreaRef>(null);
@@ -40,14 +49,12 @@ export default function ChatBottombar({
 
     if (!validated || !validated.length) return;
 
-    const newMessage: getMessagesType["messages"][number] = {
+    const newMessage: NewMessage = {
       content: validated,
       createdAt: new Date(),
-      sender: {
-        id: authData.user.id,
-        name: authData.user.name || "Name",
-        image: authData.user.image || null,
-      },
+      senderImage: authData.user.image || "",
+      senderName: authData.user.name || "User",
+      socketId: socketId,
     };
     sendMessage(newMessage);
     setMessage("");

@@ -1,16 +1,9 @@
-"use server";
 import "server-only";
 import { db } from "@/server/db";
-import getIp from "@/server/ip";
-import { ratelimit } from "@/server/ratelimit";
+import { ratelimitWithIp } from "@/server/ratelimit";
 
 export async function getListings() {
-  const ip = getIp();
-  const limited = await ratelimit.query.limit(ip);
-  if (!limited.success && ip.length)
-    throw new Error(
-      `Try again after ${Math.ceil((limited.reset - Date.now()) / 1000)} second(s)`
-    );
+  ratelimitWithIp();
   const data = await db.query.listings.findMany({
     orderBy: (listings, { desc }) => [desc(listings.startDate)],
     with: {

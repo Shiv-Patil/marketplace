@@ -7,7 +7,7 @@ import { messages, user_conversations } from "@/server/db/schema";
 import getSchema, { schemaType } from "@/lib/input_schemas/new_message";
 import { ratelimit } from "@/server/ratelimit";
 import { pusher } from "@/server//pusher";
-import { getMessagesType } from "@/server/mutations/get_messages";
+import { NewMessage } from "@/components/chatpage/ChatBottomBar";
 
 export async function saveMessage(data: schemaType) {
   const formSchema = getSchema();
@@ -28,14 +28,12 @@ export async function saveMessage(data: schemaType) {
   });
   if (!conversation) throw new Error("Invalid conversation");
 
-  const newMessage: getMessagesType["messages"][number] = {
+  const newMessage: NewMessage = {
     content: data.content,
-    sender: {
-      id: user.user.id,
-      name: user.user.name || "Name",
-      image: user.user.image || null,
-    },
+    senderName: user.user.name || "User",
+    senderImage: user.user.image || "",
     createdAt: new Date(),
+    socketId: data.socketId,
   };
   pusher.trigger(
     `private-messages_${data.conversationId}`,

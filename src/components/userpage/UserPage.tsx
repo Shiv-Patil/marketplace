@@ -2,7 +2,7 @@
 
 import { MessageCircleMoreIcon, PlusCircleIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Listings from "@/components/Listings";
 import { getUserType } from "@/server/queries/get_user";
@@ -10,7 +10,6 @@ import assert from "assert";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { getMessages } from "@/server/mutations/get_messages";
 
 export default function UserPage({ data }: { data: getUserType }) {
   assert(data);
@@ -40,7 +39,6 @@ export default function UserPage({ data }: { data: getUserType }) {
                   buttonVariants({ variant: "outline" }),
                   "flex w-32 gap-2 sm:w-48"
                 )}
-                onClick={() => getMessages({ withUserId: data.id })}
               >
                 <MessageCircleMoreIcon /> Chat
               </Link>
