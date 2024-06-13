@@ -23,7 +23,8 @@ export async function getListing(id: number) {
     where: eq(listings.listingId, id),
   });
   const timeleft = data ? data.endDate.getTime() - new Date().getTime() : 0;
-  if (timeleft <= 0 && data) data.status = "expired";
+  if (timeleft <= 0 && data && data.status === "active")
+    data.status = "expired";
   return data
     ? {
         currentPrice: data.bids.length ? data.bids[0].amount : data.basePrice,

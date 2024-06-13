@@ -23,7 +23,7 @@ export async function getListings() {
     return {
       currentPrice: el.bids.length ? el.bids[0].amount : el.basePrice,
       ...el,
-      status: timeleft <= 0 ? "expired" : el.status,
+      status: timeleft <= 0 && el.status === "active" ? "expired" : el.status,
     };
   });
 }
