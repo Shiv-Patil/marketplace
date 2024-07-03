@@ -1,4 +1,4 @@
-DB_CONTAINER_NAME="peer-safe-postgres"
+DB_CONTAINER_NAME="marketplace-postgres"
 
 if ! [ -x "$(command -v docker)" ]; then
   echo -e "Docker is not installed. Please install docker and try again.\nDocker install guide: https://docs.docker.com/engine/install/"

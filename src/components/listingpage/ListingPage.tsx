@@ -25,7 +25,7 @@ import { CarousalElementSkeleton } from "@/components/listingpage/Skeletons";
 import Link from "next/link";
 import { GenerateOTP } from "./GenerateOTP";
 import { VerifyPurchase } from "./InputOTP";
-
+import DeleteListingButton from "@/components/listingpage/DeleteListing";
 function CarousalElement({
   id,
   selected,
@@ -106,6 +106,9 @@ export default function ListingPage({ data }: { data: getListingType }) {
         Make an offer
       </Button>
     );
+  function endauction() {
+    console.log("End auction");
+  }
   return (
     <>
       <section
@@ -202,7 +205,10 @@ export default function ListingPage({ data }: { data: getListingType }) {
                   <VerifyPurchase listingId={data.listingId} />
                 ) : null
               ) : authData?.user.id === data.sellerId ? (
-                <CloseListingButton listingId={data.listingId} />
+                <>
+                  <CloseListingButton listingId={data.listingId} />
+                  <DeleteListingButton listingId={data.listingId} />
+                </>
               ) : (
                 NewBidButtonWithAuth
               )}
